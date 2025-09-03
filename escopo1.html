@@ -5,68 +5,71 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Calculadora de Emissões GEE - Escopo 1</title>
     <style>
-        /* O estilo (CSS) é o mesmo da outra calculadora para manter a identidade visual */
+        /* Estilos mantidos para consistência visual */
         body { font-family: sans-serif; line-height: 1.6; margin: 20px; background-color: #1e1e1e; color: #d4d4d4; }
         .container { max-width: 600px; margin: auto; padding: 20px; background-color: #252526; border: 1px solid #3c3c3c; border-radius: 10px; }
         h1 { color: #4e94d8; }
         .form-group { margin-bottom: 15px; }
+        .dynamic-form-section { display: none; /* Seções dinâmicas começam escondidas */ }
         label { display: block; margin-bottom: 5px; font-weight: bold; }
         input[type="number"], select, button { padding: 10px; border-radius: 5px; border: 1px solid #3c3c3c; width: 100%; box-sizing: border-box; background-color: #3c3c3c; color: #d4d4d4; }
         button { background-color: #0e639c; color: white; cursor: pointer; font-weight: bold; margin-top: 15px; }
         button:hover { background-color: #1b7ec3; }
-        .resultado { margin-top: 20px; padding: 15px; background-color: #2c3e50; border: 1px solid #34495e; border-radius: 5px; display: none; /* Começa escondido */ }
+        .resultado { margin-top: 20px; padding: 15px; background-color: #2c3e50; border: 1px solid #34495e; border-radius: 5px; display: none; }
         .demonstracao-calculo { background-color: rgba(0,0,0,0.2); padding: 10px; border-radius: 5px; font-family: monospace; text-align: center; margin-bottom: 15px; font-size: 1.1em; }
         strong { color: #569cd6; }
         footer { text-align: center; margin-top: 30px; font-size: 0.9em; color: #888; }
-        .navegacao {
-    text-align: center;
-    margin-bottom: 30px; /* Aumenta o espaço abaixo dos botões */
-    margin-top: 15px;
-}
-.botao-nav {
-    /* Formato do botão */
-    padding: 8px 18px; /* Espaçamento interno */
-    border: 1px solid #555; /* Borda cinza */
-    border-radius: 20px; /* Cantos bem arredondados (efeito de "pílula") */
-    margin: 0 8px; /* Espaçamento entre os botões */
-
-    /* Estilo do texto */
-    color: #d4d4d4;
-    text-decoration: none;
-
-    /* Efeito suave na transição */
-    transition: all 0.3s ease;
-}
-.botao-nav:hover {
-    /* Efeito ao passar o mouse */
-    background-color: #4e94d8; /* Fundo azul do tema */
-    border-color: #4e94d8; /* Borda azul do tema */
-    color: #ffffff; /* Texto branco para contrastar */
-}
+        .navegacao { text-align: center; margin-bottom: 30px; margin-top: 15px; }
+        .botao-nav { padding: 8px 18px; border: 1px solid #555; border-radius: 20px; margin: 0 8px; color: #d4d4d4; text-decoration: none; transition: all 0.3s ease; }
+        .botao-nav:hover { background-color: #4e94d8; border-color: #4e94d8; color: #ffffff; }
     </style>
 </head>
 <body>
     <div class="container">
         <h1>Calculadora de Emissões GEE<br>(Escopo 1)</h1>
-        <p>Calcule as emissões diretas a partir do consumo de combustíveis.</p>
+        <p>Calcule emissões diretas de combustíveis ou de gases de refrigeração.</p>
 
         <form id="calculadoraForm">
             <div class="form-group">
-                <label for="tipoCombustivel">Tipo de Combustível:</label>
-                <select id="tipoCombustivel" name="tipoCombustivel" required>
-                    <option value="">-- Selecione o Combustível --</option>
-                    <option value="gasolina">Gasolina (Litros)</option>
-                    <option value="diesel">Óleo Diesel (Litros)</option>
-                    <option value="etanol">Etanol Hidratado (Litros)</option>
-                    <option value="gnv">Gás Natural Veicular (GNV) (m³)</option>
-                    <option value="glp">Gás Liquefeito de Petróleo (GLP) (kg)</option>
+                <label for="categoria">Categoria de Emissão:</label>
+                <select id="categoria" name="categoria" required>
+                    <option value="">-- Selecione uma Categoria --</option>
+                    <option value="combustiveis">Combustíveis (Fontes Estacionárias e Móveis)</option>
+                    <option value="fugitivas">Emissões Fugitivas (Ar Condicionado, etc.)</option>
                 </select>
             </div>
 
-            <div class="form-group">
-                <label for="quantidade">Quantidade Consumida:</label>
-                <input type="number" id="quantidade" name="quantidade" step="0.01" min="0" required placeholder="Ex: 1500">
-                <small id="unidadeMedida" style="color: #888;"></small>
+            <div id="formCombustiveis" class="dynamic-form-section">
+                <div class="form-group">
+                    <label for="tipoCombustivel">Fonte de Emissão:</label>
+                    <select id="tipoCombustivel">
+                        <option value="gasolina">Gasolina</option>
+                        <option value="diesel">Óleo Diesel</option>
+                        <option value="etanol">Etanol Hidratado</option>
+                        <option value="gnv">Gás Natural Veicular (GNV)</option>
+                        <option value="glp">Gás Liquefeito de Petróleo (GLP)</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="quantidadeCombustivel">Quantidade Consumida:</label>
+                    <input type="number" id="quantidadeCombustivel" step="0.01" min="0" placeholder="Ex: 1500">
+                    <small id="unidadeCombustivel" style="color: #888;"></small>
+                </div>
+            </div>
+
+            <div id="formFugitivas" class="dynamic-form-section">
+                 <div class="form-group">
+                    <label for="tipoGas">Gás de Refrigeração (recarga):</label>
+                    <select id="tipoGas">
+                        <option value="hfc134a">HFC-134a (Ar Condicionado Automotivo)</option>
+                        <option value="hfc410a">HFC-410A (Ar Condicionado Split)</option>
+                        <option value="co2">CO₂ (Extintor de Incêndio)</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="quantidadeGas">Quantidade Recarregada (em kg):</label>
+                    <input type="number" id="quantidadeGas" step="0.01" min="0" placeholder="Ex: 0.8">
+                </div>
             </div>
 
             <button type="submit">Calcular Emissão</button>
@@ -77,12 +80,15 @@
             <p id="textoResultado"></p>
             <div class="demonstracao-calculo" id="demonstracaoCalculo"></div>
             <small id="infoBaseCalculo"></small>
-        </div><br>
-<div class="navegacao">
-    <a href="https://lagando.github.io/calculoGEE/escopo1.html" class="botao-nav">Escopo 1</a>
-    <a href="https://lagando.github.io/calculoGEE/escopo2.html" class="botao-nav">Escopo 2</a>
-    <a href="https://lagando.github.io/calculoGEE/escopo3.html" class="botao-nav">Escopo 3</a>
-</div>
+        </div>
+
+        <br>
+        <div class="navegacao">
+            <a href="https://lagando.github.io/calculoGEE/escopo1.html" class="botao-nav">Escopo 1</a>
+            <a href="https://lagando.github.io/calculoGEE/escopo2.html" class="botao-nav">Escopo 2</a>
+            <a href="https://lagando.github.io/calculoGEE/escopo3.html" class="botao-nav">Escopo 3</a>
+        </div>
+
         <footer>
             <p>Feito por Gabriel Bahia - gabrielbahiapro@gmail.com</p>
             <p id="dataAtual"></p>
@@ -91,74 +97,102 @@
 
     <script>
         // --- TABELA DE DADOS ---
-        // Fatores de Emissão para Escopo 1 em kg CO₂e por unidade.
-        // Fonte: GHG Protocol Brasil (Valores de 2023). Divididos por 1000 para converter de kg para toneladas.
+        // Fatores de Emissão para Escopo 1 em Toneladas de CO₂e por unidade.
         const fatoresEmissao = {
-            gasolina: { fator: 2.196 / 1000, unidade: 'Litros', nome: 'Gasolina' },
-            diesel: { fator: 2.596 / 1000, unidade: 'Litros', nome: 'Óleo Diesel' },
-            etanol: { fator: 0.434 / 1000, unidade: 'Litros', nome: 'Etanol Hidratado' },
-            gnv: { fator: 1.996 / 1000, unidade: 'm³', nome: 'GNV' },
-            glp: { fator: 2.949 / 1000, unidade: 'kg', nome: 'GLP' }
+            combustiveis: {
+                gasolina: { fator: 2.196 / 1000, unidade: 'Litros', nome: 'Gasolina' },
+                diesel:   { fator: 2.596 / 1000, unidade: 'Litros', nome: 'Óleo Diesel' },
+                etanol:   { fator: 0.434 / 1000, unidade: 'Litros', nome: 'Etanol' },
+                gnv:      { fator: 1.996 / 1000, unidade: 'm³', nome: 'GNV' },
+                glp:      { fator: 2.949 / 1000, unidade: 'kg', nome: 'GLP' }
+            },
+            fugitivas: {
+                // O "fator" aqui é o GWP (Potencial de Aquecimento Global). O cálculo é (Qtd(kg) * GWP) / 1000
+                hfc134a: { fator: 1430 / 1000, unidade: 'kg', nome: 'Gás HFC-134a' },
+                hfc410a: { fator: 2088 / 1000, unidade: 'kg', nome: 'Gás HFC-410A' },
+                co2:     { fator: 1 / 1000,    unidade: 'kg', nome: 'CO₂ de Extintor' }
+            }
         };
 
         // --- REFERÊNCIAS AOS ELEMENTOS HTML ---
-        const seletorCombustivel = document.getElementById('tipoCombustivel');
-        const campoQuantidade = document.getElementById('quantidade');
-        const labelUnidade = document.getElementById('unidadeMedida');
+        const seletorCategoria = document.getElementById('categoria');
         const formulario = document.getElementById('calculadoraForm');
         const areaResultado = document.getElementById('areaResultado');
         const textoResultado = document.getElementById('textoResultado');
         const demonstracaoCalculo = document.getElementById('demonstracaoCalculo');
         const infoBaseCalculo = document.getElementById('infoBaseCalculo');
+        const seletorCombustivel = document.getElementById('tipoCombustivel');
+        const labelUnidadeCombustivel = document.getElementById('unidadeCombustivel');
 
         // --- FUNÇÕES ---
 
-        // Atualiza a unidade de medida na tela quando o combustível é selecionado
-        function atualizarUnidade() {
+        // Mostra o formulário correspondente à categoria selecionada
+        function mostrarFormularioCategoria() {
+            document.querySelectorAll('.dynamic-form-section').forEach(div => div.style.display = 'none');
+            areaResultado.style.display = 'none';
+
+            const categoria = seletorCategoria.value;
+            if (categoria) {
+                const formId = 'form' + categoria.charAt(0).toUpperCase() + categoria.slice(1);
+                document.getElementById(formId).style.display = 'block';
+                // Se a categoria for combustíveis, atualiza a unidade na hora
+                if(categoria === 'combustiveis') {
+                    atualizarUnidadeCombustivel();
+                }
+            }
+        }
+
+        // Atualiza a unidade de medida na tela para combustíveis
+        function atualizarUnidadeCombustivel() {
             const tipo = seletorCombustivel.value;
-            if (tipo && fatoresEmissao[tipo]) {
-                labelUnidade.textContent = `Unidade: ${fatoresEmissao[tipo].unidade}`;
-            } else {
-                labelUnidade.textContent = '';
+            if (tipo) {
+                labelUnidadeCombustivel.textContent = `Unidade: ${fatoresEmissao.combustiveis[tipo].unidade}`;
             }
         }
 
         // Função principal que faz o cálculo
         function calcularEmissao(event) {
-            event.preventDefault(); // Impede que a página recarregue
+            event.preventDefault();
+            const categoria = seletorCategoria.value;
+            if (!categoria) {
+                alert('Por favor, selecione uma categoria primeiro.');
+                return;
+            }
 
-            const tipo = seletorCombustivel.value;
-            const quantidade = parseFloat(campoQuantidade.value);
+            let quantidade, dadosAtividade, fator, emissao_tco2e;
 
-            if (!tipo || isNaN(quantidade) || quantidade <= 0) {
-                alert('Por favor, selecione um combustível e insira uma quantidade válida e positiva.');
+            // Lógica para cada categoria
+            if (categoria === 'combustiveis') {
+                const tipo = document.getElementById('tipoCombustivel').value;
+                quantidade = parseFloat(document.getElementById('quantidadeCombustivel').value);
+                dadosAtividade = fatoresEmissao.combustiveis[tipo];
+            } else if (categoria === 'fugitivas') {
+                const tipo = document.getElementById('tipoGas').value;
+                quantidade = parseFloat(document.getElementById('quantidadeGas').value);
+                dadosAtividade = fatoresEmissao.fugitivas[tipo];
+            }
+
+            if (!dadosAtividade || isNaN(quantidade) || quantidade <= 0) {
+                alert('Por favor, preencha os campos com valores válidos e positivos.');
                 areaResultado.style.display = 'none';
                 return;
             }
 
-            const dadosCombustivel = fatoresEmissao[tipo];
-            const fator_usado = dadosCombustivel.fator;
-            const emissao_tco2e = quantidade * fator_usado;
+            fator = dadosAtividade.fator;
+            emissao_tco2e = quantidade * fator;
 
-            // Função para formatar os números com vírgula decimal
             const formatNumber = (num, decimals) => num.toLocaleString('pt-BR', { minimumFractionDigits: decimals, maximumFractionDigits: decimals });
 
-            // Exibe os resultados
-            textoResultado.innerHTML = `O consumo de <strong>${formatNumber(quantidade, 2)} ${dadosCombustivel.unidade}</strong> de <strong>${dadosCombustivel.nome}</strong> resultou na emissão estimada de <strong>${formatNumber(emissao_tco2e, 4)} toneladas de CO₂ equivalente (tCO₂e)</strong>.`;
-            demonstracaoCalculo.innerHTML = `${formatNumber(quantidade, 2)} ${dadosCombustivel.unidade} &times; ${fator_usado.toFixed(5)} = ${formatNumber(emissao_tco2e, 4)} tCO₂e`;
-            infoBaseCalculo.textContent = `Cálculo baseado no fator de emissão de ${fator_usado.toFixed(5)} tCO₂e/${dadosCombustivel.unidade}.`;
+            textoResultado.innerHTML = `Para <strong>${dadosAtividade.nome}</strong>, uma atividade de <strong>${formatNumber(quantidade, 2)} ${dadosAtividade.unidade}</strong> resultou na emissão de <strong>${formatNumber(emissao_tco2e, 4)} tCO₂e</strong>.`;
+            demonstracaoCalculo.innerHTML = `${formatNumber(quantidade, 2)} ${dadosAtividade.unidade} &times; ${fator.toFixed(4)} = ${formatNumber(emissao_tco2e, 4)} tCO₂e`;
+            infoBaseCalculo.textContent = `Fator de emissão: ${fator.toFixed(4)} tCO₂e/${dadosAtividade.unidade}.`;
             areaResultado.style.display = 'block';
         }
 
         // --- EVENT LISTENERS ---
-
-        // Define a data atual no rodapé quando a página carrega
         document.getElementById('dataAtual').textContent = new Date().toLocaleDateString('pt-BR');
-
-        // Atualiza a unidade quando o combustível muda
-        seletorCombustivel.addEventListener('change', atualizarUnidade);
-
-        // Executa o cálculo quando o formulário é enviado
+        seletorCategoria.addEventListener('change', mostrarFormularioCategoria);
+        seletorCombustivel.addEventListener('change', atualizarUnidadeCombustivel);
         formulario.addEventListener('submit', calcularEmissao);
     </script>
 </body>
