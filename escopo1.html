@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calculadora de Emissões GEE - Escopo 1</title>
+    <style>
+        /* O estilo (CSS) é o mesmo da outra calculadora para manter a identidade visual */
+        body { font-family: sans-serif; line-height: 1.6; margin: 20px; background-color: #1e1e1e; color: #d4d4d4; }
+        .container { max-width: 600px; margin: auto; padding: 20px; background-color: #252526; border: 1px solid #3c3c3c; border-radius: 10px; }
+        h1 { color: #4e94d8; }
+        .form-group { margin-bottom: 15px; }
+        label { display: block; margin-bottom: 5px; font-weight: bold; }
+        input[type="number"], select, button { padding: 10px; border-radius: 5px; border: 1px solid #3c3c3c; width: 100%; box-sizing: border-box; background-color: #3c3c3c; color: #d4d4d4; }
+        button { background-color: #0e639c; color: white; cursor: pointer; font-weight: bold; margin-top: 15px; }
+        button:hover { background-color: #1b7ec3; }
+        .resultado { margin-top: 20px; padding: 15px; background-color: #2c3e50; border: 1px solid #34495e; border-radius: 5px; display: none; /* Começa escondido */ }
+        .demonstracao-calculo { background-color: rgba(0,0,0,0.2); padding: 10px; border-radius: 5px; font-family: monospace; text-align: center; margin-bottom: 15px; font-size: 1.1em; }
+        strong { color: #569cd6; }
+        footer { text-align: center; margin-top: 30px; font-size: 0.9em; color: #888; }
+        .navegacao {
+    text-align: center;
+    margin-bottom: 30px; /* Aumenta o espaço abaixo dos botões */
+    margin-top: 15px;
+}
+.botao-nav {
+    /* Formato do botão */
+    padding: 8px 18px; /* Espaçamento interno */
+    border: 1px solid #555; /* Borda cinza */
+    border-radius: 20px; /* Cantos bem arredondados (efeito de "pílula") */
+    margin: 0 8px; /* Espaçamento entre os botões */
+
+    /* Estilo do texto */
+    color: #d4d4d4;
+    text-decoration: none;
+
+    /* Efeito suave na transição */
+    transition: all 0.3s ease;
+}
+.botao-nav:hover {
+    /* Efeito ao passar o mouse */
+    background-color: #4e94d8; /* Fundo azul do tema */
+    border-color: #4e94d8; /* Borda azul do tema */
+    color: #ffffff; /* Texto branco para contrastar */
+}
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Calculadora de Emissões GEE (Escopo 1)</h1>
+        <p>Calcule as emissões diretas a partir do consumo de combustíveis.</p>
+
+        <form id="calculadoraForm">
+            <div class="form-group">
+                <label for="tipoCombustivel">Tipo de Combustível:</label>
+                <select id="tipoCombustivel" name="tipoCombustivel" required>
+                    <option value="">-- Selecione o Combustível --</option>
+                    <option value="gasolina">Gasolina (Litros)</option>
+                    <option value="diesel">Óleo Diesel (Litros)</option>
+                    <option value="etanol">Etanol Hidratado (Litros)</option>
+                    <option value="gnv">Gás Natural Veicular (GNV) (m³)</option>
+                    <option value="glp">Gás Liquefeito de Petróleo (GLP) (kg)</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="quantidade">Quantidade Consumida:</label>
+                <input type="number" id="quantidade" name="quantidade" step="0.01" min="0" required placeholder="Ex: 1500">
+                <small id="unidadeMedida" style="color: #888;"></small>
+            </div>
+
+            <button type="submit">Calcular Emissão</button>
+        </form>
+
+        <div class="resultado" id="areaResultado">
+            <h2>Resultado da Emissão:</h2>
+            <p id="textoResultado"></p>
+            <div class="demonstracao-calculo" id="demonstracaoCalculo"></div>
+            <small id="infoBaseCalculo"></small>
+        </div><br>
+<div class="navegacao">
+    <a href="https://lagando.github.io/calculoGEE/escopo1.html" class="botao-nav">Escopo 1</a>
+    <a href="https://lagando.github.io/calculoGEE/escopo2.html" class="botao-nav">Escopo 2</a>
+    <a href="https://lagando.github.io/calculoGEE/escopo3.html" class="botao-nav">Escopo 3</a>
+</div>
+        <footer>
+            <p>Feito por Gabriel Bahia - gabrielbahiapro@gmail.com</p>
+            <p id="dataAtual"></p>
+        </footer>
+    </div>
+
+    <script>
+        // --- TABELA DE DADOS ---
+        // Fatores de Emissão para Escopo 1 em kg CO₂e por unidade.
+        // Fonte: GHG Protocol Brasil (Valores de 2023). Divididos por 1000 para converter de kg para toneladas.
+        const fatoresEmissao = {
+            gasolina: { fator: 2.196 / 1000, unidade: 'Litros', nome: 'Gasolina' },
+            diesel: { fator: 2.596 / 1000, unidade: 'Litros', nome: 'Óleo Diesel' },
+            etanol: { fator: 0.434 / 1000, unidade: 'Litros', nome: 'Etanol Hidratado' },
+            gnv: { fator: 1.996 / 1000, unidade: 'm³', nome: 'GNV' },
+            glp: { fator: 2.949 / 1000, unidade: 'kg', nome: 'GLP' }
+        };
+
+        // --- REFERÊNCIAS AOS ELEMENTOS HTML ---
+        const seletorCombustivel = document.getElementById('tipoCombustivel');
+        const campoQuantidade = document.getElementById('quantidade');
+        const labelUnidade = document.getElementById('unidadeMedida');
+        const formulario = document.getElementById('calculadoraForm');
+        const areaResultado = document.getElementById('areaResultado');
+        const textoResultado = document.getElementById('textoResultado');
+        const demonstracaoCalculo = document.getElementById('demonstracaoCalculo');
+        const infoBaseCalculo = document.getElementById('infoBaseCalculo');
+
+        // --- FUNÇÕES ---
+
+        // Atualiza a unidade de medida na tela quando o combustível é selecionado
+        function atualizarUnidade() {
+            const tipo = seletorCombustivel.value;
+            if (tipo && fatoresEmissao[tipo]) {
+                labelUnidade.textContent = `Unidade: ${fatoresEmissao[tipo].unidade}`;
+            } else {
+                labelUnidade.textContent = '';
+            }
+        }
+
+        // Função principal que faz o cálculo
+        function calcularEmissao(event) {
+            event.preventDefault(); // Impede que a página recarregue
+
+            const tipo = seletorCombustivel.value;
+            const quantidade = parseFloat(campoQuantidade.value);
+
+            if (!tipo || isNaN(quantidade) || quantidade <= 0) {
+                alert('Por favor, selecione um combustível e insira uma quantidade válida e positiva.');
+                areaResultado.style.display = 'none';
+                return;
+            }
+
+            const dadosCombustivel = fatoresEmissao[tipo];
+            const fator_usado = dadosCombustivel.fator;
+            const emissao_tco2e = quantidade * fator_usado;
+
+            // Função para formatar os números com vírgula decimal
+            const formatNumber = (num, decimals) => num.toLocaleString('pt-BR', { minimumFractionDigits: decimals, maximumFractionDigits: decimals });
+
+            // Exibe os resultados
+            textoResultado.innerHTML = `O consumo de <strong>${formatNumber(quantidade, 2)} ${dadosCombustivel.unidade}</strong> de <strong>${dadosCombustivel.nome}</strong> resultou na emissão estimada de <strong>${formatNumber(emissao_tco2e, 4)} toneladas de CO₂ equivalente (tCO₂e)</strong>.`;
+            demonstracaoCalculo.innerHTML = `${formatNumber(quantidade, 2)} ${dadosCombustivel.unidade} &times; ${fator_usado.toFixed(5)} = ${formatNumber(emissao_tco2e, 4)} tCO₂e`;
+            infoBaseCalculo.textContent = `Cálculo baseado no fator de emissão de ${fator_usado.toFixed(5)} tCO₂e/${dadosCombustivel.unidade}.`;
+            areaResultado.style.display = 'block';
+        }
+
+        // --- EVENT LISTENERS ---
+
+        // Define a data atual no rodapé quando a página carrega
+        document.getElementById('dataAtual').textContent = new Date().toLocaleDateString('pt-BR');
+
+        // Atualiza a unidade quando o combustível muda
+        seletorCombustivel.addEventListener('change', atualizarUnidade);
+
+        // Executa o cálculo quando o formulário é enviado
+        formulario.addEventListener('submit', calcularEmissao);
+    </script>
+</body>
+</html>
