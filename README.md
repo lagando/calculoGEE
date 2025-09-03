@@ -1,7 +1,8 @@
 # calculoGEE
 Calculadora de Emissões de GEE<br>
 <br>
-https://lagando.github.io/calculoGEE/main
+<a>https://lagando.github.io/calculoGEE/escopo1.html</a><br>
+<a>https://lagando.github.io/calculoGEE/escopo2.html</a><br>
 
 <br>
 <br>
