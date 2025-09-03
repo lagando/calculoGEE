@@ -20,7 +20,7 @@ Acesse as calculadoras online através dos links abaixo. O projeto é 100% funci
 <br>
 <br>## 📖 Sobre o Projeto
 <br>
-Este projeto foi criado para simplificar o cálculo de emissões de GEE, seguindo as metodologias do **Programa Brasileiro GHG Protocol** e utilizando fatores de emissão de fontes públicas e oficiais, como o Ministério da Ciência, Tecnologia e Inovações (MCTI) e planilhas de referência do setor.
+Este projeto foi criado para simplificar o cálculo de emissões de GEE, seguindo as metodologias do <b>Programa Brasileiro GHG Protocol</b> e utilizando fatores de emissão de fontes públicas e oficiais, como o Ministério da Ciência, Tecnologia e Inovações (MCTI) e planilhas de referência do setor.
 <br><br>
 As calculadoras abrangem:<br>
 * <b>Escopo 1:</b> Emissões diretas provenientes da queima de combustíveis (Gasolina, Diesel, etc.) e emissões fugitivas de gases de refrigeração (Ar Condicionado).<br>
