@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calculadora de Emissões GEE - Escopo 3</title>
+    <style>
+        body { font-family: sans-serif; line-height: 1.6; margin: 20px; background-color: #1e1e1e; color: #d4d4d4; }
+        .container { max-width: 600px; margin: auto; padding: 20px; background-color: #252526; border: 1px solid #3c3c3c; border-radius: 10px; }
+        h1 { color: #4e94d8; }
+        .form-group { margin-bottom: 15px; }
+        .dynamic-form-section { display: none; /* Todas as seções dinâmicas começam escondidas */ }
+        label { display: block; margin-bottom: 5px; font-weight: bold; }
+        input[type="number"], select, button { padding: 10px; border-radius: 5px; border: 1px solid #3c3c3c; width: 100%; box-sizing: border-box; background-color: #3c3c3c; color: #d4d4d4; }
+        button { background-color: #0e639c; color: white; cursor: pointer; font-weight: bold; margin-top: 15px; }
+        button:hover { background-color: #1b7ec3; }
+        .resultado { margin-top: 20px; padding: 15px; background-color: #2c3e50; border: 1px solid #34495e; border-radius: 5px; display: none; }
+        .demonstracao-calculo { background-color: rgba(0,0,0,0.2); padding: 10px; border-radius: 5px; font-family: monospace; text-align: center; margin-bottom: 15px; font-size: 1.1em; }
+        strong { color: #569cd6; }
+        footer { text-align: center; margin-top: 30px; font-size: 0.9em; color: #888; }
+        .navegacao {
+    text-align: center;
+    margin-bottom: 30px; /* Aumenta o espaço abaixo dos botões */
+    margin-top: 15px;
+}
+.botao-nav {
+    /* Formato do botão */
+    padding: 8px 18px; /* Espaçamento interno */
+    border: 1px solid #555; /* Borda cinza */
+    border-radius: 20px; /* Cantos bem arredondados (efeito de "pílula") */
+    margin: 0 8px; /* Espaçamento entre os botões */
+
+    /* Estilo do texto */
+    color: #d4d4d4;
+    text-decoration: none;
+
+    /* Efeito suave na transição */
+    transition: all 0.3s ease;
+}
+.botao-nav:hover {
+    /* Efeito ao passar o mouse */
+    background-color: #4e94d8; /* Fundo azul do tema */
+    border-color: #4e94d8; /* Borda azul do tema */
+    color: #ffffff; /* Texto branco para contrastar */
+}
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Calculadora de Emissões GEE<br>(Escopo 3)</h1>
+        <p>Calcule emissões indiretas selecionando uma categoria abaixo.</p>
+
+        <form id="calculadoraForm">
+            <div class="form-group">
+                <label for="categoria">Categoria de Emissão:</label>
+                <select id="categoria" name="categoria" required>
+                    <option value="">-- Selecione uma Categoria --</option>
+                    <option value="viagens">Viagens de Negócios (Aéreas)</option>
+                    <option value="residuos">Resíduos Gerados</option>
+                    <option value="deslocamento">Deslocamento de Funcionários</option>
+                </select>
+            </div>
+
+            <div id="formViagens" class="dynamic-form-section">
+                <div class="form-group">
+                    <label for="tipoVoo">Tipo de Voo:</label>
+                    <select id="tipoVoo">
+                        <option value="domestico">Doméstico</option>
+                        <option value="curtaDistancia">Curta Distância Internacional (< 3700 km)</option>
+                        <option value="longaDistancia">Longa Distância Internacional (> 3700 km)</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="distanciaKm">Distância Total (ida e volta, em km):</label>
+                    <input type="number" id="distanciaKm" placeholder="Ex: 1800">
+                </div>
+            </div>
+
+            <div id="formResiduos" class="dynamic-form-section">
+                <div class="form-group">
+                    <label for="pesoResiduos">Peso dos Resíduos (em toneladas):</label>
+                    <input type="number" id="pesoResiduos" step="0.01" placeholder="Ex: 1.5">
+                </div>
+            </div>
+
+            <div id="formDeslocamento" class="dynamic-form-section">
+                <div class="form-group">
+                    <label for="tipoVeiculo">Tipo de Veículo:</label>
+                    <select id="tipoVeiculo">
+                        <option value="carroGasolina">Carro a Gasolina</option>
+                        <option value="carroEtanol">Carro a Etanol</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="distanciaDeslocamentoKm">Distância Total Percorrida no Período (em km):</label>
+                    <input type="number" id="distanciaDeslocamentoKm" placeholder="Ex: 5000">
+                </div>
+            </div>
+
+            <button type="submit">Calcular Emissão</button>
+        </form>
+
+        <div class="resultado" id="areaResultado">
+            <h2>Resultado da Emissão:</h2>
+            <p id="textoResultado"></p>
+            <div class="demonstracao-calculo" id="demonstracaoCalculo"></div>
+            <small id="infoBaseCalculo"></small>
+        </div><br>
+<div class="navegacao">
+    <a href="https://lagando.github.io/calculoGEE/escopo1.html" class="botao-nav">Escopo 1</a>
+    <a href="https://lagando.github.io/calculoGEE/escopo2.html" class="botao-nav">Escopo 2</a>
+    <a href="https://lagando.github.io/calculoGEE/escopo3.html" class="botao-nav">Escopo 3</a>
+</div>
+        <footer>
+            <p>Feito por Gabriel Bahia - gabrielbahiapro@gmail.com</p>
+        </footer>
+    </div>
+
+    <script>
+        // --- TABELA DE DADOS ---
+        // Fatores de Emissão para Escopo 3 em Toneladas de CO₂e por unidade.
+        // Fontes: DEFRA, GHG Protocol Brasil, MCTI (valores exemplificativos).
+        const fatoresEmissao = {
+            viagens: {
+                domestico:        { fator: 0.00015589, unidade: 'km', nome: 'Voo Doméstico' },
+                curtaDistancia:   { fator: 0.00011832, unidade: 'km', nome: 'Voo Curta Distância' },
+                longaDistancia:   { fator: 0.00009403, unidade: 'km', nome: 'Voo Longa Distância' }
+            },
+            residuos: {
+                aterro: { fator: 0.561, unidade: 'toneladas', nome: 'Resíduos em Aterro' }
+            },
+            deslocamento: {
+                carroGasolina: { fator: 0.000156, unidade: 'km', nome: 'Carro a Gasolina' },
+                carroEtanol:   { fator: 0.000047, unidade: 'km', nome: 'Carro a Etanol' }
+            }
+        };
+
+        // --- REFERÊNCIAS AOS ELEMENTOS HTML ---
+        const seletorCategoria = document.getElementById('categoria');
+        const formulario = document.getElementById('calculadoraForm');
+        const areaResultado = document.getElementById('areaResultado');
+        const textoResultado = document.getElementById('textoResultado');
+        const demonstracaoCalculo = document.getElementById('demonstracaoCalculo');
+        const infoBaseCalculo = document.getElementById('infoBaseCalculo');
+
+        // --- FUNÇÕES ---
+
+        // Mostra o formulário correspondente à categoria selecionada
+        function mostrarFormularioCategoria() {
+            // Esconde todos os formulários dinâmicos
+            document.querySelectorAll('.dynamic-form-section').forEach(div => div.style.display = 'none');
+            areaResultado.style.display = 'none'; // Esconde resultado antigo
+
+            const categoria = seletorCategoria.value;
+            if (categoria) {
+                const formId = 'form' + categoria.charAt(0).toUpperCase() + categoria.slice(1);
+                document.getElementById(formId).style.display = 'block';
+            }
+        }
+
+        // Função principal que faz o cálculo
+        function calcularEmissao(event) {
+            event.preventDefault();
+
+            const categoria = seletorCategoria.value;
+            if (!categoria) {
+                alert('Por favor, selecione uma categoria primeiro.');
+                return;
+            }
+
+            let quantidade, dadosAtividade, fator, emissao_tco2e;
+
+            // Lógica para cada categoria
+            switch (categoria) {
+                case 'viagens':
+                    const tipoVoo = document.getElementById('tipoVoo').value;
+                    quantidade = parseFloat(document.getElementById('distanciaKm').value);
+                    dadosAtividade = fatoresEmissao.viagens[tipoVoo];
+                    break;
+                case 'residuos':
+                    quantidade = parseFloat(document.getElementById('pesoResiduos').value);
+                    dadosAtividade = fatoresEmissao.residuos.aterro;
+                    break;
+                case 'deslocamento':
+                    const tipoVeiculo = document.getElementById('tipoVeiculo').value;
+                    quantidade = parseFloat(document.getElementById('distanciaDeslocamentoKm').value);
+                    dadosAtividade = fatoresEmissao.deslocamento[tipoVeiculo];
+                    break;
+            }
+
+            if (isNaN(quantidade) || quantidade <= 0) {
+                alert('Por favor, preencha a quantidade com um valor válido e positivo.');
+                return;
+            }
+
+            fator = dadosAtividade.fator;
+            emissao_tco2e = quantidade * fator;
+
+            const formatNumber = (num, decimals) => num.toLocaleString('pt-BR', { minimumFractionDigits: decimals, maximumFractionDigits: decimals });
+
+            // Exibe os resultados
+            textoResultado.innerHTML = `Para <strong>${dadosAtividade.nome}</strong>, uma atividade de <strong>${formatNumber(quantidade, 2)} ${dadosAtividade.unidade}</strong> resultou na emissão estimada de <strong>${formatNumber(emissao_tco2e, 4)} tCO₂e</strong>.`;
+            demonstracaoCalculo.innerHTML = `${formatNumber(quantidade, 2)} ${dadosAtividade.unidade} &times; ${fator.toFixed(6)} = ${formatNumber(emissao_tco2e, 4)} tCO₂e`;
+            infoBaseCalculo.textContent = `Fator de emissão: ${fator.toFixed(6)} tCO₂e/${dadosAtividade.unidade}.`;
+            areaResultado.style.display = 'block';
+        }
+
+        // --- EVENT LISTENERS ---
+        seletorCategoria.addEventListener('change', mostrarFormularioCategoria);
+        formulario.addEventListener('submit', calcularEmissao);
+    </script>
+</body>
+</html>
