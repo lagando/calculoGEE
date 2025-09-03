@@ -21,29 +21,31 @@
         strong { color: #569cd6; }
         footer { text-align: center; margin-top: 30px; font-size: 0.9em; color: #888; }
         .navegacao {
-    text-align: center;
-    margin-bottom: 30px; /* Aumenta o espaço abaixo dos botões */
+    /* Novas propriedades Flexbox */
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+
+    gap: 10px; /* Espaçamento moderno entre os botões */
+    margin-bottom: 30px;
     margin-top: 15px;
 }
 .botao-nav {
-    /* Formato do botão */
-    padding: 8px 18px; /* Espaçamento interno */
-    border: 1px solid #555; /* Borda cinza */
-    border-radius: 20px; /* Cantos bem arredondados (efeito de "pílula") */
-    margin: 0 8px; /* Espaçamento entre os botões */
+    /* O estilo do botão em si não muda muito */
+    padding: 8px 18px;
+    border: 1px solid #555;
+    border-radius: 20px;
     
-    /* Estilo do texto */
+    /* Não precisamos mais de margem aqui, pois o 'gap' cuida disso */
+
     color: #d4d4d4;
     text-decoration: none;
-    
-    /* Efeito suave na transição */
     transition: all 0.3s ease;
 }
 .botao-nav:hover {
-    /* Efeito ao passar o mouse */
-    background-color: #4e94d8; /* Fundo azul do tema */
-    border-color: #4e94d8; /* Borda azul do tema */
-    color: #ffffff; /* Texto branco para contrastar */
+    background-color: #4e94d8;
+    border-color: #4e94d8;
+    color: #ffffff;
 }
     </style>
 </head>
