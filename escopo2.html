@@ -20,6 +20,31 @@
         .demonstracao-calculo { background-color: rgba(0,0,0,0.2); padding: 10px; border-radius: 5px; font-family: monospace; text-align: center; margin-bottom: 15px; font-size: 1.1em; }
         strong { color: #569cd6; }
         footer { text-align: center; margin-top: 30px; font-size: 0.9em; color: #888; }
+        .navegacao {
+    text-align: center;
+    margin-bottom: 30px; /* Aumenta o espaço abaixo dos botões */
+    margin-top: 15px;
+}
+.botao-nav {
+    /* Formato do botão */
+    padding: 8px 18px; /* Espaçamento interno */
+    border: 1px solid #555; /* Borda cinza */
+    border-radius: 20px; /* Cantos bem arredondados (efeito de "pílula") */
+    margin: 0 8px; /* Espaçamento entre os botões */
+    
+    /* Estilo do texto */
+    color: #d4d4d4;
+    text-decoration: none;
+    
+    /* Efeito suave na transição */
+    transition: all 0.3s ease;
+}
+.botao-nav:hover {
+    /* Efeito ao passar o mouse */
+    background-color: #4e94d8; /* Fundo azul do tema */
+    border-color: #4e94d8; /* Borda azul do tema */
+    color: #ffffff; /* Texto branco para contrastar */
+}
     </style>
 </head>
 <body>
@@ -57,8 +82,12 @@
             <p id="textoResultado"></p>
             <div class="demonstracao-calculo" id="demonstracaoCalculo"></div>
             <small id="infoBaseCalculo"></small>
-        </div>
-
+        </div><br>
+<div class="navegacao">
+    <a href="https://lagando.github.io/calculoGEE/escopo1.html" class="botao-nav">Escopo 1</a>
+    <a href="https://lagando.github.io/calculoGEE/escopo2.html" class="botao-nav">Escopo 2</a>
+    <a href="https://lagando.github.io/calculoGEE/escopo3.html" class="botao-nav">Escopo 3</a>
+</div>
         <footer>
             <p>Feito por Gabriel Bahia - gabrielbahiapro@gmail.com</p>
             <p id="dataAtual"></p>
