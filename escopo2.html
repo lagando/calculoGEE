@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Calculadora de Emissões GEE - Escopo 2</title>
     <style>
+        /* Estilos CSS permanecem os mesmos */
         body { font-family: sans-serif; line-height: 1.6; margin: 20px; background-color: #1e1e1e; color: #d4d4d4; }
         .container { max-width: 600px; margin: auto; padding: 20px; background-color: #252526; border: 1px solid #3c3c3c; border-radius: 10px; }
         h1 { color: #4e94d8; }
@@ -16,64 +17,102 @@
         input[readonly] { background-color: #2a2a2a; cursor: not-allowed; opacity: 0.7; }
         button { background-color: #0e639c; color: white; cursor: pointer; font-weight: bold; margin-top: 15px; }
         button:hover { background-color: #1b7ec3; }
-        .resultado { margin-top: 20px; padding: 15px; background-color: #2c3e50; border: 1px solid #34495e; border-radius: 5px; display: none; /* Começa escondido */ }
-        .demonstracao-calculo { background-color: rgba(0,0,0,0.2); padding: 10px; border-radius: 5px; font-family: monospace; text-align: center; margin-bottom: 15px; font-size: 1.1em; }
+        .resultado { margin-top: 20px; padding: 15px; background-color: #2c3e50; border: 1px solid #34495e; border-radius: 5px; display: none; }
+        .demonstracao-calculo { background-color: rgba(0,0,0,0.2); padding: 10px; border-radius: 5px; font-family: monospace; text-align: left; margin-bottom: 15px; font-size: 0.9em; line-height: 1.5; }
+        .demonstracao-calculo .calc-title { text-align: center; font-weight: bold; font-size: 1.2em; margin-bottom: 10px; display: block; }
+        .demonstracao-calculo .calc-center { text-align: center; }
         strong { color: #569cd6; }
         footer { text-align: center; margin-top: 30px; font-size: 0.9em; color: #888; }
-        .navegacao {
-    /* Novas propriedades Flexbox */
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-
-    gap: 10px; /* Espaçamento moderno entre os botões */
-    margin-bottom: 30px;
-    margin-top: 15px;
-}
-.botao-nav {
-    /* O estilo do botão em si não muda muito */
-    padding: 8px 18px;
-    border: 1px solid #555;
-    border-radius: 20px;
-    
-    /* Não precisamos mais de margem aqui, pois o 'gap' cuida disso */
-
-    color: #d4d4d4;
-    text-decoration: none;
-    transition: all 0.3s ease;
-}
-.botao-nav:hover {
-    background-color: #4e94d8;
-    border-color: #4e94d8;
-    color: #ffffff;
-}
+        .navegacao { display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; margin-bottom: 30px; margin-top: 15px; }
+        .botao-nav { padding: 8px 18px; border: 1px solid #555; border-radius: 20px; color: #d4d4d4; text-decoration: none; transition: all 0.3s ease; }
+        .botao-nav:hover { background-color: #4e94d8; border-color: #4e94d8; color: #ffffff; }
+        .info-label { font-size: 0.8em; color: #aaa; margin-top: 5px;}
+        fieldset { border: 1px solid #3c3c3c; border-radius: 5px; padding: 15px; margin-bottom: 15px; }
+        legend { color: #4e94d8; font-weight: bold; padding: 0 10px; }
+        #areaComparativo ul { list-style: none; padding-left: 0; }
+        #areaComparativo li { margin-bottom: 12px; font-size: 1.05em; }
     </style>
 </head>
 <body>
     <div class="container">
-        <h1>Calculadora de Emissões GEE <br>(Escopo 2)</h1>
-        <p>Selecione o mês e ano. Para datas futuras (após 06/2025), o fator de emissão é editável.</p>
+        <h1>Calculadora de Emissões GEE <br>(Escopo 2) v5-HTML</h1>
+        <p>Pegue sua conta de luz, e veja quantos kWh você gastou para saber quanto você emitiu na atmosfera.</p>
+        <p>Preencha as datas de início e fim para calcular a emissão para qualquer período.</p>
 
         <form id="calculadoraForm">
-            <div class="form-row">
-                <div class="form-group">
-                    <label for="mes">Mês:</label>
-                    <select id="mes" name="mes" required></select>
+            <fieldset>
+                <legend>Data de Início do Período de Referência</legend>
+                 <div class="form-row">
+                    <div class="form-group" style="flex: 1;">
+                        <label for="dia_anterior">Dia</label>
+                        <input type="number" id="dia_anterior" min="1" max="31" required>
+                    </div>
+                    <div class="form-group" style="flex: 2;">
+                         <label for="mes_anterior">Mês</label>
+                        <select id="mes_anterior" required>
+                            <option value="1">01 - Janeiro</option>
+                            <option value="2">02 - Fevereiro</option>
+                            <option value="3">03 - Março</option>
+                            <option value="4">04 - Abril</option>
+                            <option value="5">05 - Maio</option>
+                            <option value="6">06 - Junho</option>
+                            <option value="7">07 - Julho</option>
+                            <option value="8">08 - Agosto</option>
+                            <option value="9">09 - Setembro</option>
+                            <option value="10">10 - Outubro</option>
+                            <option value="11">11 - Novembro</option>
+                            <option value="12">12 - Dezembro</option>
+                        </select>
+                    </div>
+                    <div class="form-group" style="flex: 1.5;">
+                         <label for="ano_anterior">Ano</label>
+                        <select id="ano_anterior" required>
+                            </select>
+                    </div>
                 </div>
-                <div class="form-group">
-                    <label for="ano">Ano:</label>
-                    <select id="ano" name="ano" required></select>
+            </fieldset>
+
+             <fieldset>
+                <legend>Data de Fim do Período de Referência</legend>
+                 <div class="form-row">
+                    <div class="form-group" style="flex: 1;">
+                        <label for="dia_atual">Dia</label>
+                        <input type="number" id="dia_atual" min="1" max="31" required>
+                    </div>
+                    <div class="form-group" style="flex: 2;">
+                         <label for="mes_atual">Mês</label>
+                        <select id="mes_atual" required>
+                            <option value="1">01 - Janeiro</option>
+                            <option value="2">02 - Fevereiro</option>
+                            <option value="3">03 - Março</option>
+                            <option value="4">04 - Abril</option>
+                            <option value="5">05 - Maio</option>
+                            <option value="6">06 - Junho</option>
+                            <option value="7">07 - Julho</option>
+                            <option value="8">08 - Agosto</option>
+                            <option value="9">09 - Setembro</option>
+                            <option value="10">10 - Outubro</option>
+                            <option value="11">11 - Novembro</option>
+                            <option value="12">12 - Dezembro</option>
+                        </select>
+                    </div>
+                    <div class="form-group" style="flex: 1.5;">
+                         <label for="ano_atual">Ano</label>
+                        <select id="ano_atual" required>
+                            </select>
+                    </div>
                 </div>
+            </fieldset>
+
+            <div class="form-group">
+                <label for="consumo_kwh">Consumo Total de Energia no Período (em kWh):</label>
+                <input type="number" id="consumo_kwh" step="0.01" min="0" required>
             </div>
 
             <div class="form-group">
-                <label for="consumo_kwh">Consumo de energia (em kWh):</label>
-                <input type="number" id="consumo_kwh" name="consumo_kwh" step="0.01" min="0" required>
-            </div>
-
-            <div class="form-group">
-                <label for="fator_emissao">Fator de Emissão (tCO₂e/MWh):</label>
-                <input type="number" id="fator_emissao" name="fator_emissao" step="0.0001" min="0" required>
+                <label for="fator_emissao">Fator de Emissão Ponderado (tCO₂e/MWh):</label>
+                <input type="number" id="fator_emissao" step="0.000001" min="0" readonly required>
+                 <p class="info-label">Calculado automaticamente com base no período selecionado.</p>
             </div>
 
             <button type="submit">Calcular Emissão</button>
@@ -82,160 +121,298 @@
         <div class="resultado" id="areaResultado">
             <h2>Resultado da Emissão:</h2>
             <p id="textoResultado"></p>
-            <div class="demonstracao-calculo" id="demonstracaoCalculo"></div>
-            <small id="infoBaseCalculo"></small>
-        </div><br>
-        <div class="navegacao">
-            <a href="https://lagando.github.io/calculoGEE/escopo1.html" class="botao-nav">Escopo 1</a>
-            <a href="https://lagando.github.io/calculoGEE/escopo2.html" class="botao-nav">Escopo 2</a>
-            <a href="https://lagando.github.io/calculoGEE/escopo3.html" class="botao-nav">Escopo 3</a>
-            <a href="https://lagando.github.io/calculoGEE/evitadas.html" class="botao-nav">Emissões evitadas</a>
+            <p id="mediaDiariaResultado"></p>
+            <div id="demonstracaoCalculo"></div>
         </div>
+
+        <div class="resultado" id="areaComparativo" style="background-color: #1c2b3a;">
+        </div>
+
+        <br>
+
         <footer>
             <p>Feito por Gabriel Bahia - gabrielbahiapro@gmail.com</p>
-            <p>03/09/2025</p>
+            <p>Atualizado em: 07/09/2025</p>
         </footer>
     </div>
 
     <script>
-        // --- TABELA DE DADOS ---
+        // --- DADOS DO JSON EMBUTIDOS DIRETAMENTE NO JAVASCRIPT ---
         const fatoresEmissao = {
-            2006: { 1: 0.0322, 2: 0.0346, 3: 0.0337, 4: 0.0275, 5: 0.0317, 6: 0.0306, 7: 0.0351, 8: 0.0336, 9: 0.0383, 10: 0.036, 11: 0.0265, 12: 0.028 },
-            2007: { 1: 0.0229, 2: 0.0195, 3: 0.0195, 4: 0.0197, 5: 0.0161, 6: 0.0256, 7: 0.031, 8: 0.0324, 9: 0.0355, 10: 0.0377, 11: 0.0406, 12: 0.0496 },
-            2008: { 1: 0.0584, 2: 0.0668, 3: 0.0599, 4: 0.0453, 5: 0.0459, 6: 0.0521, 7: 0.0437, 8: 0.0425, 9: 0.0411, 10: 0.0438, 11: 0.0334, 12: 0.0477 },
-            2009: { 1: 0.0281, 2: 0.0237, 3: 0.0247, 4: 0.0245, 5: 0.0405, 6: 0.0369, 7: 0.0241, 8: 0.0199, 9: 0.0162, 10: 0.0179, 11: 0.0181, 12: 0.0194 },
-            2010: { 1: 0.0211, 2: 0.028, 3: 0.0243, 4: 0.0238, 5: 0.0341, 6: 0.0506, 7: 0.0435, 8: 0.0774, 9: 0.0907, 10: 0.0817, 11: 0.0869, 12: 0.0532 },
-            2011: { 1: 0.0262, 2: 0.0288, 3: 0.0208, 4: 0.0198, 5: 0.027, 6: 0.0341, 7: 0.0308, 8: 0.0301, 9: 0.0273, 10: 0.035, 11: 0.0356, 12: 0.0349 },
-            2012: { 1: 0.0294, 2: 0.0322, 3: 0.0405, 4: 0.0642, 5: 0.062, 6: 0.0522, 7: 0.0394, 8: 0.046, 9: 0.0783, 10: 0.0984, 11: 0.1247, 12: 0.1168 },
-            2013: { 1: 0.1151, 2: 0.109, 3: 0.0981, 4: 0.0959, 5: 0.1151, 6: 0.1079, 7: 0.0838, 8: 0.0833, 9: 0.084, 10: 0.0831, 11: 0.093, 12: 0.0841 },
-            2014: { 1: 0.0911, 2: 0.1169, 3: 0.1238, 4: 0.131, 5: 0.1422, 6: 0.144, 7: 0.1464, 8: 0.1578, 9: 0.1431, 10: 0.1413, 11: 0.1514, 12: 0.1368 },
-            2015: { 1: 0.1275, 2: 0.1321, 3: 0.1369, 4: 0.1301, 5: 0.1258, 6: 0.1406, 7: 0.1221, 8: 0.1183, 9: 0.1217, 10: 0.118, 11: 0.1127, 12: 0.1075 },
-            2016: { 1: 0.096, 2: 0.0815, 3: 0.071, 4: 0.0757, 5: 0.0701, 6: 0.076, 7: 0.0725, 8: 0.0836, 9: 0.0897, 10: 0.0925, 11: 0.1002, 12: 0.0714 },
-            2017: { 1: 0.0566, 2: 0.0536, 3: 0.0696, 4: 0.0815, 5: 0.0847, 6: 0.0676, 7: 0.0965, 8: 0.1312, 9: 0.1264, 10: 0.1366, 11: 0.1193, 12: 0.0892 },
-            2018: { 1: 0.064, 2: 0.0608, 3: 0.0635, 4: 0.0523, 5: 0.0607, 6: 0.0915, 7: 0.1076, 8: 0.1181, 9: 0.1182, 10: 0.0802, 11: 0.0366, 12: 0.0343 },
-            2019: { 1: 0.0355, 2: 0.0667, 3: 0.053, 4: 0.0514, 5: 0.0482, 6: 0.0426, 7: 0.0906, 8: 0.107, 9: 0.1024, 10: 0.104, 11: 0.1078, 12: 0.0913 },
-            2020: { 1: 0.0916, 2: 0.0558, 3: 0.0384, 4: 0.0296, 5: 0.0358, 6: 0.0491, 7: 0.04, 8: 0.0414, 9: 0.0329, 10: 0.0961, 11: 0.1191, 12: 0.1109 },
-            2021: { 1: 0.1164, 2: 0.082, 3: 0.0673, 4: 0.0764, 5: 0.0883, 6: 0.1491, 7: 0.1634, 8: 0.1743, 9: 0.1699, 10: 0.1786, 11: 0.1474, 12: 0.1029 },
-            2022: { 1: 0.0732, 2: 0.0503, 3: 0.0406, 4: 0.0216, 5: 0.028, 6: 0.0441, 7: 0.0419, 8: 0.0457, 9: 0.0491, 10: 0.0471, 11: 0.0402, 12: 0.0294 },
-            2023: { 1: 0.0292, 2: 0.0238, 3: 0.0296, 4: 0.034, 5: 0.0295, 6: 0.0528, 7: 0.0495, 8: 0.0419, 9: 0.0343, 10: 0.0387, 11: 0.0529, 12: 0.0459 },
-            2024: { 1: 0.0421, 2: 0.0376, 3: 0.0278, 4: 0.0195, 5: 0.0283, 6: 0.0365, 7: 0.0571, 8: 0.0739, 9: 0.0917, 10: 0.1127, 11: 0.0701, 12: 0.0564 },
-            2025: { 1: 0.02366, 2: 0.02478, 3: 0.02145, 4: 0.02894, 5: 0.0309, 6: 0.0455 },
+            "2006": { "1": 0.0322, "2": 0.0346, "3": 0.0337, "4": 0.0275, "5": 0.0317, "6": 0.0306, "7": 0.0351, "8": 0.0336, "9": 0.0383, "10": 0.036, "11": 0.0265, "12": 0.028 },
+            "2007": { "1": 0.0229, "2": 0.0195, "3": 0.0195, "4": 0.0197, "5": 0.0161, "6": 0.0256, "7": 0.031, "8": 0.0324, "9": 0.0355, "10": 0.0377, "11": 0.0406, "12": 0.0496 },
+            "2008": { "1": 0.0584, "2": 0.0668, "3": 0.0599, "4": 0.0453, "5": 0.0459, "6": 0.0521, "7": 0.0437, "8": 0.0425, "9": 0.0411, "10": 0.0438, "11": 0.0334, "12": 0.0477 },
+            "2009": { "1": 0.0281, "2": 0.0237, "3": 0.0247, "4": 0.0245, "5": 0.0405, "6": 0.0369, "7": 0.0241, "8": 0.0199, "9": 0.0162, "10": 0.0179, "11": 0.0181, "12": 0.0194 },
+            "2010": { "1": 0.0211, "2": 0.028, "3": 0.0243, "4": 0.0238, "5": 0.0341, "6": 0.0506, "7": 0.0435, "8": 0.0774, "9": 0.0907, "10": 0.0817, "11": 0.0869, "12": 0.0532 },
+            "2011": { "1": 0.0262, "2": 0.0288, "3": 0.0208, "4": 0.0198, "5": 0.027, "6": 0.0341, "7": 0.0308, "8": 0.0301, "9": 0.0273, "10": 0.035, "11": 0.0356, "12": 0.0349 },
+            "2012": { "1": 0.0294, "2": 0.0322, "3": 0.0405, "4": 0.0642, "5": 0.062, "6": 0.0522, "7": 0.0394, "8": 0.046, "9": 0.0783, "10": 0.0984, "11": 0.1247, "12": 0.1168 },
+            "2013": { "1": 0.1151, "2": 0.109, "3": 0.0981, "4": 0.0959, "5": 0.1151, "6": 0.1079, "7": 0.0838, "8": 0.0833, "9": 0.084, "10": 0.0831, "11": 0.093, "12": 0.0841 },
+            "2014": { "1": 0.0911, "2": 0.1169, "3": 0.1238, "4": 0.131, "5": 0.1422, "6": 0.144, "7": 0.1464, "8": 0.1578, "9": 0.1431, "10": 0.1413, "11": 0.1514, "12": 0.1368 },
+            "2015": { "1": 0.1275, "2": 0.1321, "3": 0.1369, "4": 0.1301, "5": 0.1258, "6": 0.1406, "7": 0.1221, "8": 0.1183, "9": 0.1217, "10": 0.118, "11": 0.1127, "12": 0.1075 },
+            "2016": { "1": 0.096, "2": 0.0815, "3": 0.071, "4": 0.0757, "5": 0.0701, "6": 0.076, "7": 0.0725, "8": 0.0836, "9": 0.0897, "10": 0.0925, "11": 0.1002, "12": 0.0714 },
+            "2017": { "1": 0.0566, "2": 0.0536, "3": 0.0696, "4": 0.0815, "5": 0.0847, "6": 0.0676, "7": 0.0965, "8": 0.1312, "9": 0.1264, "10": 0.1366, "11": 0.1193, "12": 0.0892 },
+            "2018": { "1": 0.064, "2": 0.0608, "3": 0.0635, "4": 0.0523, "5": 0.0607, "6": 0.0915, "7": 0.1076, "8": 0.1181, "9": 0.1182, "10": 0.0802, "11": 0.0366, "12": 0.0343 },
+            "2019": { "1": 0.0355, "2": 0.0667, "3": 0.053, "4": 0.0514, "5": 0.0482, "6": 0.0426, "7": 0.0906, "8": 0.107, "9": 0.1024, "10": 0.104, "11": 0.1078, "12": 0.0913 },
+            "2020": { "1": 0.0916, "2": 0.0558, "3": 0.0384, "4": 0.0296, "5": 0.0358, "6": 0.0491, "7": 0.04, "8": 0.0414, "9": 0.0329, "10": 0.0961, "11": 0.1191, "12": 0.1109 },
+            "2021": { "1": 0.1164, "2": 0.082, "3": 0.0673, "4": 0.0764, "5": 0.0883, "6": 0.1491, "7": 0.1634, "8": 0.1743, "9": 0.1699, "10": 0.1786, "11": 0.1474, "12": 0.1029 },
+            "2022": { "1": 0.0732, "2": 0.0503, "3": 0.0406, "4": 0.0216, "5": 0.028, "6": 0.0441, "7": 0.0419, "8": 0.0457, "9": 0.0491, "10": 0.0471, "11": 0.0402, "12": 0.0294 },
+            "2023": { "1": 0.0292, "2": 0.0238, "3": 0.0296, "4": 0.034, "5": 0.0295, "6": 0.0528, "7": 0.0495, "8": 0.0419, "9": 0.0343, "10": 0.0387, "11": 0.0529, "12": 0.0459 },
+            "2024": { "1": 0.0421, "2": 0.0376, "3": 0.0278, "4": 0.0195, "5": 0.0283, "6": 0.0365, "7": 0.0571, "8": 0.0739, "9": 0.0917, "10": 0.1127, "11": 0.0701, "12": 0.0564 },
+            "2025": { "1": 0.02366, "2": 0.02478, "3": 0.02145, "4": 0.02894, "5": 0.0309, "6": 0.0455 }
         };
 
-        // --- REFERÊNCIAS AOS ELEMENTOS HTML ---
-        const seletorAno = document.getElementById('ano');
-        const seletorMes = document.getElementById('mes');
+        // --- LÓGICA JAVASCRIPT ---
+
+        const [diaAnterior, mesAnterior, anoAnterior] = [document.getElementById('dia_anterior'), document.getElementById('mes_anterior'), document.getElementById('ano_anterior')];
+        const [diaAtual, mesAtual, anoAtual] = [document.getElementById('dia_atual'), document.getElementById('mes_atual'), document.getElementById('ano_atual')];
         const campoConsumo = document.getElementById('consumo_kwh');
         const campoFator = document.getElementById('fator_emissao');
         const formulario = document.getElementById('calculadoraForm');
         const areaResultado = document.getElementById('areaResultado');
         const textoResultado = document.getElementById('textoResultado');
+        const mediaDiariaResultado = document.getElementById('mediaDiariaResultado');
         const demonstracaoCalculo = document.getElementById('demonstracaoCalculo');
-        const infoBaseCalculo = document.getElementById('infoBaseCalculo');
+        const areaComparativo = document.getElementById('areaComparativo');
 
-        // --- FUNÇÕES ---
+        const formatNumber = (num, decimals) => num.toLocaleString('pt-BR', { minimumFractionDigits: decimals, maximumFractionDigits: decimals });
 
-        // Atualiza o campo Fator e seu estado (travado/liberado)
-        function atualizarLogicaFator() {
-            const ano = parseInt(seletorAno.value, 10);
-            const mes = parseInt(seletorMes.value, 10);
-            const isFutureDate = ano > 2025 || (ano === 2025 && mes > 6);
+        function calcularFatorPonderado() {
+            const dataInicio = new Date(parseInt(anoAnterior.value), parseInt(mesAnterior.value) - 1, parseInt(diaAnterior.value));
+            const dataFim = new Date(parseInt(anoAtual.value), parseInt(mesAtual.value) - 1, parseInt(diaAtual.value));
 
-            if (isFutureDate) {
-                campoFator.readOnly = false;
-                if (!campoFator.dataset.userEdited) {
-                    campoFator.value = '';
-                }
-                campoFator.placeholder = 'Insira o fator manualmente';
-            } else {
-                campoFator.readOnly = true;
-                campoFator.placeholder = '';
-                campoFator.dataset.userEdited = '';
-                campoFator.value = fatoresEmissao[ano]?.[mes] || 0;
+            if (isNaN(dataInicio) || isNaN(dataFim) || dataFim < dataInicio) {
+                campoFator.value = '';
+                campoFator.placeholder = 'Período inválido';
+                return null;
             }
+
+            let totalDias = 0;
+            let somaPonderada = 0;
+            const breakdown = [];
+            let dataCorrente = new Date(dataInicio);
+
+            while(dataCorrente <= dataFim){
+                const ano = dataCorrente.getFullYear();
+                const mes = dataCorrente.getMonth() + 1;
+
+                const fatorDoMes = fatoresEmissao[ano]?.[mes];
+                if(fatorDoMes === undefined){
+                    campoFator.value = '';
+                    campoFator.placeholder = `Fator para ${mes}/${ano} não encontrado`;
+                    return null;
+                }
+
+                let diasNesteMes = 0;
+                const ultimoDiaDoMes = new Date(ano, mes, 0).getDate();
+
+                if(dataCorrente.getFullYear() === dataInicio.getFullYear() && dataCorrente.getMonth() === dataInicio.getMonth()){
+                    diasNesteMes = ultimoDiaDoMes - dataInicio.getDate() + 1;
+                } else {
+                    diasNesteMes = ultimoDiaDoMes;
+                }
+
+                if(dataCorrente.getFullYear() === dataFim.getFullYear() && dataCorrente.getMonth() === dataFim.getMonth()){
+                    diasNesteMes = dataFim.getDate();
+                    if(dataInicio.getFullYear() === dataFim.getFullYear() && dataInicio.getMonth() === dataFim.getMonth()){
+                        diasNesteMes = dataFim.getDate() - dataInicio.getDate() + 1;
+                    }
+                }
+
+                somaPonderada += diasNesteMes * fatorDoMes;
+                totalDias += diasNesteMes;
+                breakdown.push({ ano, mes, dias: diasNesteMes, fator: fatorDoMes });
+
+                dataCorrente.setMonth(dataCorrente.getMonth() + 1);
+                dataCorrente.setDate(1);
+            }
+
+            if (totalDias === 0) return null;
+
+            const fatorFinalPonderado = somaPonderada / totalDias;
+            campoFator.value = fatorFinalPonderado.toFixed(8);
+
+            return { fatorPonderado: fatorFinalPonderado, totalDias, breakdown };
         }
 
-        // Popula os seletores de Mês e Ano
         function inicializarFormulario() {
-            const anoAtual = new Date().getFullYear();
-            const mesAtual = new Date().getMonth() + 1;
+            // Lógica para encontrar o último ano/mês movida do PHP para o JS
+            const anosDisponiveis = Object.keys(fatoresEmissao).map(Number);
+            const ultimoAnoDisponivel = Math.max(...anosDisponiveis);
+            const mesesDoUltimoAno = Object.keys(fatoresEmissao[ultimoAnoDisponivel]).map(Number);
+            const ultimoMesDisponivel = Math.max(...mesesDoUltimoAno);
 
-            // Popula anos
-            for (let y = 2027; y >= 2006; y--) {
-                const option = document.createElement('option');
-                option.value = y;
-                option.textContent = y;
-                if (y === anoAtual) option.selected = true;
-                seletorAno.appendChild(option);
+            // Lógica para popular os seletores de ano
+            const anoInicial = Math.min(...anosDisponiveis);
+            const selectsAno = [anoAnterior, anoAtual];
+            selectsAno.forEach(select => {
+                select.innerHTML = ''; // Limpa opções existentes
+                for (let ano = ultimoAnoDisponivel; ano >= anoInicial; ano--) {
+                    const option = document.createElement('option');
+                    option.value = ano;
+                    option.textContent = ano;
+                    select.appendChild(option);
+                }
+            });
+
+            // Define a data inicial padrão
+            let [mA, aA] = [ultimoMesDisponivel, ultimoAnoDisponivel];
+            mesAtual.value = mA;
+            anoAtual.value = aA;
+            let [mP, aP] = [mA - 1, aA];
+            if (mP === 0) {
+                mP = 12;
+                aP = aP - 1;
             }
+            mesAnterior.value = mP;
+            anoAnterior.value = aP;
+            diaAnterior.value = 1;
+            diaAtual.value = new Date(aA, mA, 0).getDate();
 
-            // Popula meses
-            for (let m = 1; m <= 12; m++) {
-                const option = document.createElement('option');
-                option.value = m;
-                option.textContent = m.toString().padStart(2, '0');
-                if (m === mesAtual) option.selected = true;
-                seletorMes.appendChild(option);
-            }
-
-            // Define a data atual no rodapé
             document.getElementById('dataAtual').textContent = new Date().toLocaleDateString('pt-BR');
 
-            // Define o estado inicial do campo de fator
-            atualizarLogicaFator();
+            // Calcula o fator inicial
+            calcularFatorPonderado();
         }
 
-        // Função principal que faz o cálculo
         function calcularEmissao(event) {
-            event.preventDefault(); // Impede que a página recarregue
-
+            event.preventDefault();
+            const dadosCalculo = calcularFatorPonderado();
             const consumo_kwh = parseFloat(campoConsumo.value);
-            const fator_usado = parseFloat(campoFator.value);
-            const ano = seletorAno.value;
-            const mes = seletorMes.value.padStart(2, '0');
 
-            if (isNaN(consumo_kwh) || isNaN(fator_usado) || consumo_kwh <= 0 || fator_usado <= 0) {
-                alert('Por favor, preencha o consumo e o fator com valores válidos e positivos.');
+            if (!dadosCalculo || isNaN(consumo_kwh) || consumo_kwh <= 0) {
+                alert('Verifique os dados. Preencha o período e o consumo com valores válidos.');
                 areaResultado.style.display = 'none';
+                areaComparativo.style.display = 'none';
                 return;
             }
 
+            const fator_usado = parseFloat(campoFator.value);
             const consumo_mwh = consumo_kwh / 1000;
             const emissao_tco2e = consumo_mwh * fator_usado;
+            const mediaDiaria = emissao_tco2e / dadosCalculo.totalDias;
 
-            // Funções para formatar os números com vírgula decimal
-            const formatNumber = (num, decimals) => num.toLocaleString('pt-BR', { minimumFractionDigits: decimals, maximumFractionDigits: decimals });
+            const [dAnt, mAnt, aAnt] = [String(diaAnterior.value).padStart(2, '0'), String(mesAnterior.value).padStart(2, '0'), anoAnterior.value];
+            const [dAtu, mAtu, aAtu] = [String(diaAtual.value).padStart(2, '0'), String(mesAtual.value).padStart(2, '0'), anoAtual.value];
 
-            // Exibe os resultados
-            textoResultado.innerHTML = `Para o mês de <strong>${mes}/${ano}</strong>, um consumo de <strong>${formatNumber(consumo_kwh, 2)} kWh</strong> resultou na emissão estimada de <strong>${formatNumber(emissao_tco2e, 4)} toneladas de CO₂ equivalente (tCO₂e)</strong>.`;
-            demonstracaoCalculo.innerHTML = `(${formatNumber(consumo_kwh, 2)} kWh / 1000) &times; ${formatNumber(fator_usado, 4)} = ${formatNumber(emissao_tco2e, 4)} tCO₂e`;
-            infoBaseCalculo.textContent = `Cálculo baseado no fator de emissão de ${formatNumber(fator_usado, 4)} tCO₂e/MWh.`;
+            textoResultado.innerHTML = `Para o período de <strong>${dAnt}/${mAnt}/${aAnt}</strong> a <strong>${dAtu}/${mAtu}/${aAtu}</strong>, a emissão total foi de <strong>${formatNumber(emissao_tco2e, 6)} tCO₂e</strong>.`;
+            mediaDiariaResultado.innerHTML = `Isto representa uma média de <strong>${formatNumber(mediaDiaria, 8)} tCO₂e por dia</strong>.`;
+
+            let breakdownHtml = dadosCalculo.breakdown.map(item =>
+                `&nbsp;${String(item.mes).padStart(2,'0')}/${item.ano}: ${String(item.dias).padStart(2,' ')} dias &times; ${formatNumber(item.fator, 5)}`
+            ).join('<br>');
+            let demoHtml = `<div class="demonstracao-calculo">
+                    <span class="calc-title">Composição do Fator Ponderado</span>
+                    ${breakdownHtml}
+                    <hr>
+                    Total: ${dadosCalculo.totalDias} dias<br>
+                    <strong>Fator Final: ${formatNumber(dadosCalculo.fatorPonderado, 8)} tCO₂e/MWh</strong>
+                </div>`;
+            demoHtml += `<div class="demonstracao-calculo calc-center">
+                <span class="calc-title">Cálculo da Emissão Final</span>
+                (${formatNumber(consumo_kwh, 2)} kWh / 1000) &times; ${formatNumber(fator_usado, 8)}<br>
+                = <strong>${formatNumber(emissao_tco2e, 6)} tCO₂e</strong>
+            </div>`;
+            demonstracaoCalculo.innerHTML = demoHtml;
+
+
+            // --- SEÇÃO DE COMPARAÇÃO ---
+            const TCO2E_POR_KM_CARRO_GASOLINA = 0.00025;
+            const TCO2E_SEQUESTRADO_POR_ARVORE_ANO = 0.022;
+            const TCO2E_POR_CARGA_SMARTPHONE = 0.0000084;
+            const TCO2E_POR_HORA_STREAMING_HD = 0.00005;
+            const TCO2E_POR_KG_CARNE_BOVINA = 0.060;
+            const TCO2E_POR_VOO_RIO_SP = 0.06;
+            const TCO2E_POR_M2_DESMATAMENTO_AMAZONIA = 0.066;
+            const TCO2E_POR_BARRIL_PETROLEO = 0.43;
+            const TCO2E_POR_LATA_ALUMINIO = 0.00013;
+            const KWH_MEDIO_CASA_MES = 160;
+            const KWH_GERADO_M2_PAINEL_SOLAR_ANO = 220;
+            const MWH_POR_HORA_AR_CONDICIONADO = 0.0009;
+            const MWH_POR_BANHO_ELETRICO_10MIN = 0.00092;
+            const consumo_mwh_total = consumo_kwh / 1000;
+            const TCO2E_EVITADO_LATA_ALUMINIO = 0.000126;
+            const TCO2E_EVITADO_GARRAFA_PET = 0.000022;
+            const TCO2E_EVITADO_KG_PAPEL = 0.003;
+            const TCO2E_EVITADO_KG_ORGANICO_COMPOSTADO = 0.0006;
+
+            const kmDeCarro = emissao_tco2e / TCO2E_POR_KM_CARRO_GASOLINA;
+            const arvoresPorAno = emissao_tco2e / TCO2E_SEQUESTRADO_POR_ARVORE_ANO;
+            const cargasDeSmartphone = emissao_tco2e / TCO2E_POR_CARGA_SMARTPHONE;
+            const horasDeStreaming = emissao_tco2e / TCO2E_POR_HORA_STREAMING_HD;
+            const kgDeCarne = emissao_tco2e / TCO2E_POR_KG_CARNE_BOVINA;
+            const voosRioSP = emissao_tco2e / TCO2E_POR_VOO_RIO_SP;
+            const m2Desmatados = emissao_tco2e / TCO2E_POR_M2_DESMATAMENTO_AMAZONIA;
+            const camposDeFutebol = m2Desmatados / 7140;
+            const barrisDePetroleo = emissao_tco2e / TCO2E_POR_BARRIL_PETROLEO;
+            const latasDeAluminio = emissao_tco2e / TCO2E_POR_LATA_ALUMINIO;
+            const casasAbastecidasMes = consumo_kwh / KWH_MEDIO_CASA_MES;
+            const m2PaineisSolaresAno = consumo_kwh / KWH_GERADO_M2_PAINEL_SOLAR_ANO;
+            const horasDeArCondicionado = consumo_mwh_total / MWH_POR_HORA_AR_CONDICIONADO;
+            const banhosDeChuveiro = consumo_mwh_total / MWH_POR_BANHO_ELETRICO_10MIN;
+            const latasAluminioRecicladas = emissao_tco2e / TCO2E_EVITADO_LATA_ALUMINIO;
+            const garrafasPetRecicladas = emissao_tco2e / TCO2E_EVITADO_GARRAFA_PET;
+            const kgPapelReciclado = emissao_tco2e / TCO2E_EVITADO_KG_PAPEL;
+            const kgOrganicoCompostado = emissao_tco2e / TCO2E_EVITADO_KG_ORGANICO_COMPOSTADO;
+
+            const comparativoHtml = `
+                <h3 style="text-align:center; color: #569cd6; margin-bottom: 20px;">O total emitido neste período equivale a:</h3>
+
+                <h4 style="color: #4e94d8; border-bottom: 1px solid #444; padding-bottom: 5px;">🏠 No dia a dia...</h4>
+                <ul>
+                    <li>🚿 <strong>${formatNumber(banhosDeChuveiro, 0)}</strong> banhos de 10 minutos em um chuveiro elétrico.</li>
+                    <li>❄️ Manter um ar condicionado ligado por <strong>${formatNumber(horasDeArCondicionado, 0)}</strong> horas.</li>
+                    <li>📱 Carregar completamente um smartphone <strong>${formatNumber(cargasDeSmartphone, 0)}</strong> vezes.</li>
+                    <li>📺 Assistir a <strong>${formatNumber(horasDeStreaming, 0)}</strong> horas de vídeo em alta definição.</li>
+                </ul>
+
+                <h4 style="color: #4e94d8; border-bottom: 1px solid #444; padding-bottom: 5px; margin-top: 25px;">💡 Energia e Indústria...</h4>
+                <ul>
+                    <li>🏠 A energia consumida por <strong>${formatNumber(casasAbastecidasMes, 1)} residências</strong> durante um mês.</li>
+                    <li>☀️ A geração anual de <strong>${formatNumber(m2PaineisSolaresAno, 1)} m²</strong> de painéis solares.</li>
+                    <li>🛢️ A queima de <strong>${formatNumber(barrisDePetroleo, 2)} barris</strong> de petróleo.</li>
+                    <li>🥫 A produção de <strong>${formatNumber(latasDeAluminio, 0)} latinhas</strong> de alumínio.</li>
+                </ul>
+
+                <h4 style="color: #4e94d8; border-bottom: 1px solid #444; padding-bottom: 5px; margin-top: 25px;">🚗 Transporte e Brasil...</h4>
+                 <ul>
+                    <li>🚗 Dirigir um carro de passeio a gasolina por <strong>${formatNumber(kmDeCarro, 0)} km</strong>.</li>
+                    <li>✈️ <strong>${formatNumber(voosRioSP, 0)}</strong> voos (só de ida) na ponte aérea Rio-São Paulo por passageiro.</li>
+                    <li>🐄 As emissões da produção de <strong>${formatNumber(kgDeCarne, 0)} kg</strong> de carne bovina.</li>
+                    <li>🌳 O carbono que <strong>${formatNumber(arvoresPorAno, 0)} árvores</strong> adultas absorvem da atmosfera em um ano.</li>
+                    <li>🔥 O desmatamento de <strong>${formatNumber(m2Desmatados, 0)} m²</strong> de floresta amazônica.
+                        <br><small style="opacity: 0.8;"><i>(Equivalente a <strong>${formatNumber(camposDeFutebol, 2)}</strong> campos de futebol)</i></small>
+                    </li>
+                </ul>
+
+                <h4 style="color: #4e94d8; border-bottom: 1px solid #444; padding-bottom: 5px; margin-top: 25px;">♻️ Reciclagem e Ações Positivas</h4>
+                <p style="font-size:0.9em; opacity:0.8; margin-top:-10px; margin-bottom:15px;">Esta mesma quantidade de emissão poderia ser <strong>evitada</strong> com ações como:</p>
+                 <ul>
+                    <li>🥫 Reciclar <strong>${formatNumber(latasAluminioRecicladas, 0)} latinhas</strong> de alumínio.</li>
+                    <li>🍾 Reciclar <strong>${formatNumber(garrafasPetRecicladas, 0)} garrafas PET</strong> de 500ml.</li>
+                    <li>📰 Reciclar <strong>${formatNumber(kgPapelReciclado, 0)} kg</strong> de papel e papelão.</li>
+                    <li>🥕 Composter <strong>${formatNumber(kgOrganicoCompostado, 0)} kg</strong> de resíduos orgânicos (evitando a geração de metano no aterro).</li>
+                </ul>
+
+                <p style="font-size: 0.8em; text-align: center; opacity: 0.7; margin-top:20px;"><i>* As equivalências são estimativas para fins ilustrativos, baseadas em médias de fontes como EPA (incluindo o modelo WARM), IEA, INPE, EPE e Embrapa.</i></p>
+            `;
+
+            areaComparativo.innerHTML = comparativoHtml;
             areaResultado.style.display = 'block';
+            areaComparativo.style.display = 'block';
         }
 
-        // --- EVENT LISTENERS (OS "OUVIDORES" DE EVENTOS) ---
+        // --- INICIALIZAÇÃO E EVENTOS ---
 
-        // Inicializa o formulário quando a página carrega
+        // Quando o DOM estiver pronto, inicializa o formulário
         document.addEventListener('DOMContentLoaded', inicializarFormulario);
 
-        // Atualiza a lógica do fator quando a data muda
-        seletorAno.addEventListener('change', () => {
-            campoFator.dataset.userEdited = '';
-            atualizarLogicaFator();
-        });
-        seletorMes.addEventListener('change', () => {
-            campoFator.dataset.userEdited = '';
-            atualizarLogicaFator();
+        // Adiciona ouvintes de evento para recalcular o fator sempre que uma data mudar
+        [diaAnterior, mesAnterior, anoAnterior, diaAtual, mesAtual, anoAtual].forEach(campo => {
+            campo.addEventListener('change', calcularFatorPonderado);
+            campo.addEventListener('input', calcularFatorPonderado); // 'input' para campos de número
         });
 
-        // Marca se o usuário editou o campo de fator manualmente
-        campoFator.addEventListener('input', () => {
-            if (!campoFator.readOnly) {
-                campoFator.dataset.userEdited = 'true';
-            }
-        });
-
-        // Executa o cálculo quando o formulário é enviado
+        // Adiciona o ouvinte principal para o envio do formulário
         formulario.addEventListener('submit', calcularEmissao);
     </script>
 </body>
