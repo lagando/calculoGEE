@@ -8,7 +8,7 @@
         /* Estilos CSS permanecem os mesmos */
         body { font-family: sans-serif; line-height: 1.6; margin: 20px; background-color: #1e1e1e; color: #d4d4d4; }
         .container { max-width: 600px; margin: auto; padding: 20px; background-color: #252526; border: 1px solid #3c3c3c; border-radius: 10px; }
-        h1 { color: #4e94d8; }
+        h1 { color: #4e94d8; text-align: center;}
         .form-group { margin-bottom: 15px; }
         .form-row { display: flex; gap: 10px; }
         .form-row .form-group { flex: 1; }
@@ -35,9 +35,11 @@
 </head>
 <body>
     <div class="container">
-        <h1>Calculadora de Emissões GEE <br>(Escopo 2) v5-HTML</h1>
-        <p>Pegue sua conta de luz, e veja quantos kWh você gastou para saber quanto você emitiu na atmosfera.</p>
-        <p>Preencha as datas de início e fim para calcular a emissão para qualquer período.</p>
+        <h1>Calculadora de Emissões de Gases do Efeito Estufa (Escopo 2)</h1>
+        <p><strong>Escopo 2:</strong> São as emissões da eletricidade que você compra e consome. <br>(geradas na usina de energia)<br><br>
+        Pegue sua conta de luz, e veja quantos kWh (quilowatt-hora) você gastou para saber quanto você emitiu na atmosfera.<br>
+        Preencha as datas de início e fim de consumo para calcular a emissão para qualquer período.
+        </p>
 
         <form id="calculadoraForm">
             <fieldset>
@@ -67,7 +69,7 @@
                     <div class="form-group" style="flex: 1.5;">
                          <label for="ano_anterior">Ano</label>
                         <select id="ano_anterior" required>
-                            </select>
+                        </select>
                     </div>
                 </div>
             </fieldset>
@@ -99,9 +101,9 @@
                     <div class="form-group" style="flex: 1.5;">
                          <label for="ano_atual">Ano</label>
                         <select id="ano_atual" required>
-                            </select>
+                        </select>
                     </div>
-                </div>
+                </div><p style="font-style: italic; font-size: 0.9em; text-align: right;">(calculo disponível até junho/2025)</p>
             </fieldset>
 
             <div class="form-group">
@@ -129,10 +131,20 @@
         </div>
 
         <br>
-
+        <div class="navegacao">
+             <a href="https://lagando.github.io/calculoGEE/escopo1.html" class="botao-nav">Escopo 1</a>
+             <a href="https://lagando.github.io/calculoGEE/escopo2.html" class="botao-nav">Escopo 2</a>
+             <a href="https://lagando.github.io/calculoGEE/escopo3.html" class="botao-nav">Escopo 3</a>
+             <a href="https://lagando.github.io/calculoGEE/evitadas.html" class="botao-nav">Emissões Evitadas</a>
+        </div>
         <footer>
-            <p>Feito por Gabriel Bahia - gabrielbahiapro@gmail.com</p>
-            <p>Atualizado em: 07/09/2025</p>
+            <p><strong>O que é tCO₂e?</strong><br>
+            tCO₂e (tonelada de CO₂ equivalente) é a unidade de medida padrão que converte o impacto de aquecimento de todos os diferentes gases de efeito estufa em um único valor, como se tudo fosse dióxido de carbono.
+            <br><br><strong>E por que usar ele?</strong>
+            <br>Nós o usamos como base porque, como cada gás esquenta o planeta com uma "força" diferente, essa unidade nos permite somar todos eles em um resultado final único e fácil de comparar.</p>
+            <p>Feito por Gabriel Bahia - gabrielbahiapro@gmail.com<br>
+            <a href="https://www.linkedin.com/in/gabrielbahiagb/" target="_blank" style="color: #0077B5; font-weight: bold; text-decoration: underline; cursor: pointer;">- LinkedIn do pai (eu /gabrielbahiagb) -</a><br>
+            Atualizado em: 13/09/2025 - v5-HTML</p>
         </footer>
     </div>
 
@@ -235,17 +247,14 @@
         }
 
         function inicializarFormulario() {
-            // Lógica para encontrar o último ano/mês movida do PHP para o JS
             const anosDisponiveis = Object.keys(fatoresEmissao).map(Number);
             const ultimoAnoDisponivel = Math.max(...anosDisponiveis);
             const mesesDoUltimoAno = Object.keys(fatoresEmissao[ultimoAnoDisponivel]).map(Number);
             const ultimoMesDisponivel = Math.max(...mesesDoUltimoAno);
-
-            // Lógica para popular os seletores de ano
             const anoInicial = Math.min(...anosDisponiveis);
             const selectsAno = [anoAnterior, anoAtual];
             selectsAno.forEach(select => {
-                select.innerHTML = ''; // Limpa opções existentes
+                select.innerHTML = '';
                 for (let ano = ultimoAnoDisponivel; ano >= anoInicial; ano--) {
                     const option = document.createElement('option');
                     option.value = ano;
@@ -253,8 +262,6 @@
                     select.appendChild(option);
                 }
             });
-
-            // Define a data inicial padrão
             let [mA, aA] = [ultimoMesDisponivel, ultimoAnoDisponivel];
             mesAtual.value = mA;
             anoAtual.value = aA;
@@ -267,12 +274,31 @@
             anoAnterior.value = aP;
             diaAnterior.value = 1;
             diaAtual.value = new Date(aA, mA, 0).getDate();
-
-            document.getElementById('dataAtual').textContent = new Date().toLocaleDateString('pt-BR');
-
-            // Calcula o fator inicial
             calcularFatorPonderado();
         }
+
+        // --- INÍCIO DA ALTERAÇÃO ---
+        /**
+         * Formata um número para exibição de equivalências de forma inteligente.
+         * - Se for muito pequeno (mas não zero), mostra "menos de 0,01".
+         * - Se for < 10, mostra 1 ou 2 casas decimais.
+         * - Se for >= 10, mostra como número inteiro.
+         * @param {number} valor O número a ser formatado.
+         * @returns {string} O valor formatado como texto.
+         */
+        function formatarEquivalencia(valor) {
+            if (valor < 0.01 && valor > 0) {
+                return 'menos de 0,01';
+            }
+            if (valor >= 10 || valor === 0) {
+                return formatNumber(valor, 0); // Números grandes ou zero, sem decimais
+            }
+            if (valor >= 1) {
+                return formatNumber(valor, 1); // Números entre 1 e 10, com 1 decimal
+            }
+            return formatNumber(valor, 2); // Números entre 0.01 e 1, com 2 decimais
+        }
+        // --- FIM DA ALTERAÇÃO ---
 
         function calcularEmissao(event) {
             event.preventDefault();
@@ -326,7 +352,7 @@
             const TCO2E_POR_BARRIL_PETROLEO = 0.43;
             const TCO2E_POR_LATA_ALUMINIO = 0.00013;
             const KWH_MEDIO_CASA_MES = 160;
-            const KWH_GERADO_M2_PAINEL_SOLAR_ANO = 220;
+            const KWH_GERADO_M2_PAINEL_SOLAR_MES = 220 / 12;
             const MWH_POR_HORA_AR_CONDICIONADO = 0.0009;
             const MWH_POR_BANHO_ELETRICO_10MIN = 0.00092;
             const consumo_mwh_total = consumo_kwh / 1000;
@@ -346,7 +372,7 @@
             const barrisDePetroleo = emissao_tco2e / TCO2E_POR_BARRIL_PETROLEO;
             const latasDeAluminio = emissao_tco2e / TCO2E_POR_LATA_ALUMINIO;
             const casasAbastecidasMes = consumo_kwh / KWH_MEDIO_CASA_MES;
-            const m2PaineisSolaresAno = consumo_kwh / KWH_GERADO_M2_PAINEL_SOLAR_ANO;
+            const m2PaineisSolaresNecessarios = consumo_kwh / KWH_GERADO_M2_PAINEL_SOLAR_MES;
             const horasDeArCondicionado = consumo_mwh_total / MWH_POR_HORA_AR_CONDICIONADO;
             const banhosDeChuveiro = consumo_mwh_total / MWH_POR_BANHO_ELETRICO_10MIN;
             const latasAluminioRecicladas = emissao_tco2e / TCO2E_EVITADO_LATA_ALUMINIO;
@@ -354,47 +380,50 @@
             const kgPapelReciclado = emissao_tco2e / TCO2E_EVITADO_KG_PAPEL;
             const kgOrganicoCompostado = emissao_tco2e / TCO2E_EVITADO_KG_ORGANICO_COMPOSTADO;
 
+            // --- INÍCIO DA ALTERAÇÃO ---
+            // Substituição de formatNumber por formatarEquivalencia para uma exibição mais inteligente
             const comparativoHtml = `
                 <h3 style="text-align:center; color: #569cd6; margin-bottom: 20px;">O total emitido neste período equivale a:</h3>
 
                 <h4 style="color: #4e94d8; border-bottom: 1px solid #444; padding-bottom: 5px;">🏠 No dia a dia...</h4>
                 <ul>
-                    <li>🚿 <strong>${formatNumber(banhosDeChuveiro, 0)}</strong> banhos de 10 minutos em um chuveiro elétrico.</li>
-                    <li>❄️ Manter um ar condicionado ligado por <strong>${formatNumber(horasDeArCondicionado, 0)}</strong> horas.</li>
-                    <li>📱 Carregar completamente um smartphone <strong>${formatNumber(cargasDeSmartphone, 0)}</strong> vezes.</li>
-                    <li>📺 Assistir a <strong>${formatNumber(horasDeStreaming, 0)}</strong> horas de vídeo em alta definição.</li>
+                    <li>🚿 <strong>${formatarEquivalencia(banhosDeChuveiro)}</strong> banhos de 10 minutos em um chuveiro elétrico.</li>
+                    <li>❄️ Manter um ar condicionado ligado por <strong>${formatarEquivalencia(horasDeArCondicionado)}</strong> horas.</li>
+                    <li>📱 Carregar completamente um smartphone <strong>${formatarEquivalencia(cargasDeSmartphone)}</strong> vezes.</li>
+                    <li>📺 Assistir a <strong>${formatarEquivalencia(horasDeStreaming)}</strong> horas de vídeo em alta definição.</li>
                 </ul>
 
                 <h4 style="color: #4e94d8; border-bottom: 1px solid #444; padding-bottom: 5px; margin-top: 25px;">💡 Energia e Indústria...</h4>
                 <ul>
-                    <li>🏠 A energia consumida por <strong>${formatNumber(casasAbastecidasMes, 1)} residências</strong> durante um mês.</li>
-                    <li>☀️ A geração anual de <strong>${formatNumber(m2PaineisSolaresAno, 1)} m²</strong> de painéis solares.</li>
-                    <li>🛢️ A queima de <strong>${formatNumber(barrisDePetroleo, 2)} barris</strong> de petróleo.</li>
-                    <li>🥫 A produção de <strong>${formatNumber(latasDeAluminio, 0)} latinhas</strong> de alumínio.</li>
+                    <li>🏠 A energia consumida por <strong>${formatarEquivalencia(casasAbastecidasMes)} residências</strong> durante um mês.</li>
+                    <li>☀️ Seriam necessários cerca de <strong>${formatarEquivalencia(m2PaineisSolaresNecessarios)} m²</strong> de painéis solares para gerar essa mesma energia em um mês.</li>
+                    <li>🛢️ A queima de <strong>${formatarEquivalencia(barrisDePetroleo)} barris</strong> de petróleo.</li>
+                    <li>🥫 A produção de <strong>${formatarEquivalencia(latasDeAluminio)} latinhas</strong> de alumínio.</li>
                 </ul>
 
                 <h4 style="color: #4e94d8; border-bottom: 1px solid #444; padding-bottom: 5px; margin-top: 25px;">🚗 Transporte e Brasil...</h4>
                  <ul>
-                    <li>🚗 Dirigir um carro de passeio a gasolina por <strong>${formatNumber(kmDeCarro, 0)} km</strong>.</li>
-                    <li>✈️ <strong>${formatNumber(voosRioSP, 0)}</strong> voos (só de ida) na ponte aérea Rio-São Paulo por passageiro.</li>
-                    <li>🐄 As emissões da produção de <strong>${formatNumber(kgDeCarne, 0)} kg</strong> de carne bovina.</li>
-                    <li>🌳 O carbono que <strong>${formatNumber(arvoresPorAno, 0)} árvores</strong> adultas absorvem da atmosfera em um ano.</li>
-                    <li>🔥 O desmatamento de <strong>${formatNumber(m2Desmatados, 0)} m²</strong> de floresta amazônica.
-                        <br><small style="opacity: 0.8;"><i>(Equivalente a <strong>${formatNumber(camposDeFutebol, 2)}</strong> campos de futebol)</i></small>
+                    <li>🚗 Dirigir um carro de passeio a gasolina por <strong>${formatarEquivalencia(kmDeCarro)} km</strong>.</li>
+                    <li>✈️ <strong>${formatarEquivalencia(voosRioSP)}</strong> voos (só de ida) na ponte aérea Rio-São Paulo por passageiro.</li>
+                    <li>🐄 As emissões da produção de <strong>${formatarEquivalencia(kgDeCarne)} kg</strong> de carne bovina.</li>
+                    <li>🌳 O carbono que <strong>${formatarEquivalencia(arvoresPorAno)} árvores</strong> adultas absorvem da atmosfera em um ano.</li>
+                    <li>🔥 O desmatamento de <strong>${formatarEquivalencia(m2Desmatados)} m²</strong> de floresta amazônica.
+                        <br><small style="opacity: 0.8;"><i>(Equivalente a <strong>${formatarEquivalencia(camposDeFutebol)}</strong> campos de futebol)</i></small>
                     </li>
                 </ul>
 
                 <h4 style="color: #4e94d8; border-bottom: 1px solid #444; padding-bottom: 5px; margin-top: 25px;">♻️ Reciclagem e Ações Positivas</h4>
                 <p style="font-size:0.9em; opacity:0.8; margin-top:-10px; margin-bottom:15px;">Esta mesma quantidade de emissão poderia ser <strong>evitada</strong> com ações como:</p>
                  <ul>
-                    <li>🥫 Reciclar <strong>${formatNumber(latasAluminioRecicladas, 0)} latinhas</strong> de alumínio.</li>
-                    <li>🍾 Reciclar <strong>${formatNumber(garrafasPetRecicladas, 0)} garrafas PET</strong> de 500ml.</li>
-                    <li>📰 Reciclar <strong>${formatNumber(kgPapelReciclado, 0)} kg</strong> de papel e papelão.</li>
-                    <li>🥕 Composter <strong>${formatNumber(kgOrganicoCompostado, 0)} kg</strong> de resíduos orgânicos (evitando a geração de metano no aterro).</li>
+                    <li>🥫 Reciclar <strong>${formatarEquivalencia(latasAluminioRecicladas)} latinhas</strong> de alumínio.</li>
+                    <li>🍾 Reciclar <strong>${formatarEquivalencia(garrafasPetRecicladas)} garrafas PET</strong> de 500ml.</li>
+                    <li>📰 Reciclar <strong>${formatarEquivalencia(kgPapelReciclado)} kg</strong> de papel e papelão.</li>
+                    <li>🥕 Composter <strong>${formatarEquivalencia(kgOrganicoCompostado)} kg</strong> de resíduos orgânicos (evitando a geração de metano no aterro).</li>
                 </ul>
 
                 <p style="font-size: 0.8em; text-align: center; opacity: 0.7; margin-top:20px;"><i>* As equivalências são estimativas para fins ilustrativos, baseadas em médias de fontes como EPA (incluindo o modelo WARM), IEA, INPE, EPE e Embrapa.</i></p>
             `;
+            // --- FIM DA ALTERAÇÃO ---
 
             areaComparativo.innerHTML = comparativoHtml;
             areaResultado.style.display = 'block';
@@ -403,16 +432,13 @@
 
         // --- INICIALIZAÇÃO E EVENTOS ---
 
-        // Quando o DOM estiver pronto, inicializa o formulário
         document.addEventListener('DOMContentLoaded', inicializarFormulario);
 
-        // Adiciona ouvintes de evento para recalcular o fator sempre que uma data mudar
         [diaAnterior, mesAnterior, anoAnterior, diaAtual, mesAtual, anoAtual].forEach(campo => {
             campo.addEventListener('change', calcularFatorPonderado);
-            campo.addEventListener('input', calcularFatorPonderado); // 'input' para campos de número
+            campo.addEventListener('input', calcularFatorPonderado);
         });
 
-        // Adiciona o ouvinte principal para o envio do formulário
         formulario.addEventListener('submit', calcularEmissao);
     </script>
 </body>
