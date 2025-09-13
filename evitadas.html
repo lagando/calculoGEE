@@ -8,7 +8,7 @@
         /* Estilos aprimorados e consistentes */
         body { font-family: sans-serif; line-height: 1.6; margin: 20px; background-color: #1e1e1e; color: #d4d4d4; }
         .container { max-width: 600px; margin: auto; padding: 20px; background-color: #252526; border: 1px solid #3c3c3c; border-radius: 10px; }
-        h1 { color: #28a745; }
+        h1 { color: #4e94d8; text-align: center;}
         .form-group { margin-bottom: 15px; }
         label { display: block; margin-bottom: 5px; font-weight: bold; }
         input[type="number"], select, button { padding: 10px; border-radius: 5px; border: 1px solid #3c3c3c; width: 100%; box-sizing: border-box; background-color: #3c3c3c; color: #d4d4d4; }
@@ -27,8 +27,16 @@
 </head>
 <body>
     <div class="container">
-        <h1>Calculadora de Emissões Evitadas</h1>
-        <p>Calcule o impacto positivo da reciclagem de materiais.</p>
+<h1>Calculadora de Emissões Evitadas</h1>
+<p>
+    <strong>Emissões Evitadas</strong> são os gases de efeito estufa que <strong>deixam de ser lançados</strong> na atmosfera graças a uma ação positiva, como a reciclagem.
+</p>
+<p>
+    Quando reciclamos, economizamos a energia e os recursos que seriam gastos para criar um produto do zero. Essa economia de processo representa um enorme benefício para o clima.
+</p>
+<p>
+    Selecione o material, informe o peso que você reciclou e descubra o tamanho do impacto positivo que sua ação gerou!
+</p>
 
         <form id="calculadoraForm">
             <div class="form-group">
@@ -49,7 +57,7 @@
                 <label for="peso">Peso do Material Reciclado (em toneladas):</label>
                 <input type="number" id="peso" name="peso" step="0.01" min="0" required placeholder="Ex: 2.5">
             </div>
-            
+
             <button type="submit">Calcular Emissões Evitadas</button>
         </form>
 
@@ -59,7 +67,7 @@
             <div class="resultado-total" id="resultadoTotal"></div>
             <div class="demonstracao-calculo" id="demonstracaoCalculo"></div>
         </div>
-        
+
         <br>
         <div class="navegacao">
              <a href="https://lagando.github.io/calculoGEE/escopo1.html" class="botao-nav">Escopo 1</a>
@@ -67,10 +75,15 @@
              <a href="https://lagando.github.io/calculoGEE/escopo3.html" class="botao-nav">Escopo 3</a>
              <a href="https://lagando.github.io/calculoGEE/evitadas.html" class="botao-nav">Emissões Evitadas</a>
         </div>
-            
+
         <footer>
-            <p>Feito por Gabriel Bahia - gabrielbahiapro@gmail.com</p>
-            <p id="dataAtual"></p>
+            <p><strong>O que é tCO₂e?</strong><br>
+            tCO₂e (tonelada de CO₂ equivalente) é a unidade de medida padrão que converte o impacto de aquecimento de todos os diferentes gases de efeito estufa em um único valor, como se tudo fosse dióxido de carbono.
+            <br><br><strong>E por que usar ele?</strong>
+            <br>Nós o usamos como base porque, como cada gás esquenta o planeta com uma "força" diferente, essa unidade nos permite somar todos eles em um resultado final único e fácil de comparar.</p>
+            <p>Feito por Gabriel Bahia - gabrielbahiapro@gmail.com<br>
+            <a href="https://www.linkedin.com/in/gabrielbahiagb/" target="_blank" style="color: #0077B5; font-weight: bold; text-decoration: underline; cursor: pointer;">- LinkedIn do pai (eu /gabrielbahiagb) -</a><br>
+            Atualizado em: 13/09/2025 - v5-HTML</p>
         </footer>
     </div>
 
@@ -104,7 +117,7 @@
 
             const tipoMaterial = seletorMaterial.value;
             const peso = parseFloat(campoPeso.value);
-            
+
             if (!tipoMaterial || isNaN(peso) || peso <= 0) {
                 alert('Por favor, selecione um material e insira um peso válido e positivo.');
                 areaResultado.style.display = 'none';
@@ -114,7 +127,7 @@
             const dadosMaterial = fatoresEmissaoEvitada[tipoMaterial];
             const fator = dadosMaterial.fator;
             const emissao_evitada_tco2e = peso * fator;
-            
+
             const formatNumber = (num, decimals) => num.toLocaleString('pt-BR', { minimumFractionDigits: decimals, maximumFractionDigits: decimals });
 
             // Exibe os resultados
@@ -125,7 +138,7 @@
         }
 
         // --- EVENT LISTENERS ---
-        document.getElementById('dataAtual').textContent = new Date().toLocaleDateString('pt-BR');
+        //document.getElementById('dataAtual').textContent = new Date().toLocaleDateString('pt-BR');
         formulario.addEventListener('submit', calcularEmissao);
     </script>
 </body>
