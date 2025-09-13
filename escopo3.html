@@ -8,7 +8,7 @@
         /* Estilos mantidos para consistência visual */
         body { font-family: sans-serif; line-height: 1.6; margin: 20px; background-color: #1e1e1e; color: #d4d4d4; }
         .container { max-width: 600px; margin: auto; padding: 20px; background-color: #252526; border: 1px solid #3c3c3c; border-radius: 10px; }
-        h1 { color: #4e94d8; }
+        h1 { color: #4e94d8; text-align: center;}
         .form-group { margin-bottom: 15px; }
         .dynamic-form-section { display: none; }
         label { display: block; margin-bottom: 5px; font-weight: bold; }
@@ -28,13 +28,31 @@
         .navegacao { display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; margin-bottom: 30px; margin-top: 15px; }
         .botao-nav { padding: 8px 18px; border: 1px solid #555; border-radius: 20px; color: #d4d4d4; text-decoration: none; transition: all 0.3s ease; }
         .botao-nav:hover { background-color: #4e94d8; border-color: #4e94d8; color: #ffffff; }
+
+        /* --- INÍCIO DA ADIÇÃO: ESTILOS PARA A ÁREA DE COMPARAÇÃO --- */
+        #areaComparativo ul { list-style: none; padding-left: 0; }
+        #areaComparativo li { margin-bottom: 12px; font-size: 1.05em; }
+        /* --- FIM DA ADIÇÃO --- */
+
     </style>
 </head>
 <body>
     <div class="container">
-        <h1>Calculadora de Emissões GEE <br>(Escopo 3)</h1>
-        <p>Calcule emissões indiretas selecionando uma categoria abaixo.</p>
-
+<h1>Calculadora de Emissões de Gases do Efeito Estufa (Escopo 3)</h1>
+<p>
+    <strong>Escopo 3:</strong> São as emissões que sua empresa é responsável, mas que ocorrem em fontes que você <strong>não possui nem controla diretamente</strong>. É a pegada de carbono de toda a sua cadeia de valor.
+</p>
+<p>
+    O Escopo 3 é o mais amplo e complexo de todos. Para simplificar, esta calculadora foca em algumas das categorias mais comuns, que são um ótimo ponto de partida:
+</p>
+<ul>
+    <li>✈️ <strong>Viagens de Negócios:</strong> Voos e estadias em hotéis para fins corporativos.</li>
+    <li>🗑️ <strong>Resíduos Gerados:</strong> O lixo produzido na operação e enviado para aterros, compostagem, etc.</li>
+    <li>🚗 <strong>Deslocamento de Funcionários:</strong> O trajeto diário da sua equipe de casa para o trabalho.</li>
+</ul>
+<p>
+    Selecione uma dessas categorias e insira os dados para estimar o impacto.
+</p>
         <form id="calculadoraForm">
             <div class="form-group">
                 <label for="categoria">Categoria de Emissão:</label>
@@ -90,7 +108,7 @@
                     <input type="number" id="distanciaDeslocamentoKm" placeholder="Ex: 5000">
                 </div>
             </div>
-            
+
             <button type="submit">Calcular Emissão</button>
         </form>
 
@@ -100,7 +118,9 @@
             <div class="resultado-total" id="resultadoTotal"></div>
             <div class="detalhes-gases" id="detalhesGases"></div>
         </div>
-        
+
+        <div class="resultado" id="areaComparativo" style="background-color: #1c2b3a;">
+            </div>
         <br>
         <div class="navegacao">
              <a href="https://lagando.github.io/calculoGEE/escopo1.html" class="botao-nav">Escopo 1</a>
@@ -108,10 +128,15 @@
              <a href="https://lagando.github.io/calculoGEE/escopo3.html" class="botao-nav">Escopo 3</a>
              <a href="https://lagando.github.io/calculoGEE/evitadas.html" class="botao-nav">Emissões Evitadas</a>
         </div>
-            
+
         <footer>
-            <p>Feito por Gabriel Bahia - gabrielbahiapro@gmail.com</p>
-            <p id="dataAtual"></p>
+            <p><strong>O que é tCO₂e?</strong><br>
+            tCO₂e (tonelada de CO₂ equivalente) é a unidade de medida padrão que converte o impacto de aquecimento de todos os diferentes gases de efeito estufa em um único valor, como se tudo fosse dióxido de carbono.
+            <br><br><strong>E por que usar ele?</strong>
+            <br>Nós o usamos como base porque, como cada gás esquenta o planeta com uma "força" diferente, essa unidade nos permite somar todos eles em um resultado final único e fácil de comparar.</p>
+            <p>Feito por Gabriel Bahia - gabrielbahiapro@gmail.com<br>
+            <a href="https://www.linkedin.com/in/gabrielbahiagb/" target="_blank" style="color: #0077B5; font-weight: bold; text-decoration: underline; cursor: pointer;">- LinkedIn do pai (eu /gabrielbahiagb) -</a><br>
+            Atualizado em: 13/09/2025 - v5-HTML</p>
         </footer>
     </div>
 
@@ -145,19 +170,21 @@
         const detalhesGases = document.getElementById('detalhesGases');
         const seletorTipoViagem = document.getElementById('tipoViagem');
         const labelQuantidadeViagem = document.getElementById('labelQuantidadeViagem');
+        const areaComparativo = document.getElementById('areaComparativo'); // --- ADIÇÃO ---
 
         // --- FUNÇÕES ---
 
         function mostrarFormularioCategoria() {
             document.querySelectorAll('.dynamic-form-section').forEach(div => div.style.display = 'none');
             areaResultado.style.display = 'none';
+            areaComparativo.style.display = 'none'; // --- ADIÇÃO --- Esconde comparativo ao mudar
             const categoria = seletorCategoria.value;
             if (categoria) {
                 const formId = 'form' + categoria.charAt(0).toUpperCase() + categoria.slice(1);
                 document.getElementById(formId).style.display = 'block';
             }
         }
-        
+
         function atualizarFormViagem() {
             const tipoViagem = seletorTipoViagem.value;
             if (tipoViagem === 'hotel') {
@@ -168,6 +195,72 @@
                 document.getElementById('quantidadeViagem').placeholder = 'Ex: 1800';
             }
         }
+
+        // --- INÍCIO DA ADIÇÃO: NOVAS FUNÇÕES ---
+        function formatarEquivalencia(valor) {
+            if (valor < 0.01 && valor > 0) return 'menos de 0,01';
+            if (valor >= 10 || valor === 0) return valor.toLocaleString('pt-BR', { maximumFractionDigits: 0 });
+            if (valor >= 1) return valor.toLocaleString('pt-BR', { minimumFractionDigits: 1, maximumFractionDigits: 1 });
+            return valor.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+        }
+
+        function exibirComparativos(emissao_tco2e) {
+             const TCO2E_POR_KM_CARRO_GASOLINA = 0.00025;
+             const TCO2E_SEQUESTRADO_POR_ARVORE_ANO = 0.022;
+             const TCO2E_POR_VOO_RIO_SP_IDA_E_VOLTA = 0.12;
+             const TCO2E_POR_KG_CARNE_BOVINA = 0.060;
+             const TCO2E_POR_M2_DESMATAMENTO_AMAZONIA = 0.066;
+             const TCO2E_POR_CARGA_SMARTPHONE = 0.0000084;
+             const TCO2E_EVITADO_LATA_ALUMINIO = 0.000126;
+             const TCO2E_EVITADO_GARFA_PET = 0.000022;
+             const TCO2E_EVITADO_KG_PAPEL = 0.003;
+
+             const kmDeCarro = emissao_tco2e / TCO2E_POR_KM_CARRO_GASOLINA;
+             const arvoresPorAno = emissao_tco2e / TCO2E_SEQUESTRADO_POR_ARVORE_ANO;
+             const voosRioSP = emissao_tco2e / TCO2E_POR_VOO_RIO_SP_IDA_E_VOLTA;
+             const kgDeCarne = emissao_tco2e / TCO2E_POR_KG_CARNE_BOVINA;
+             const m2Desmatados = emissao_tco2e / TCO2E_POR_M2_DESMATAMENTO_AMAZONIA;
+             const camposDeFutebol = m2Desmatados / 7140;
+             const cargasDeSmartphone = emissao_tco2e / TCO2E_POR_CARGA_SMARTPHONE;
+             const latasAluminioRecicladas = emissao_tco2e / TCO2E_EVITADO_LATA_ALUMINIO;
+             const garrafasPetRecicladas = emissao_tco2e / TCO2E_EVITADO_GARFA_PET;
+             const kgPapelReciclado = emissao_tco2e / TCO2E_EVITADO_KG_PAPEL;
+
+            const comparativoHtml = `
+                <h3 style="text-align:center; color: #569cd6; margin-bottom: 20px;">Para ter uma ideia, essa emissão equivale a:</h3>
+
+                <h4 style="color: #4e94d8; border-bottom: 1px solid #444; padding-bottom: 5px;">🚗 Transporte e Cotidiano</h4>
+                <ul>
+                    <li>Dirigir um carro a gasolina por <strong>${formatarEquivalencia(kmDeCarro)} km</strong>.</li>
+                    <li>Fazer <strong>${formatarEquivalencia(voosRioSP)}</strong> viagens de ida e volta na ponte aérea Rio-São Paulo.</li>
+                    <li>Carregar completamente um smartphone <strong>${formatarEquivalencia(cargasDeSmartphone)}</strong> vezes.</li>
+                </ul>
+
+                <h4 style="color: #4e94d8; border-bottom: 1px solid #444; padding-bottom: 5px; margin-top: 25px;">🌳 Impacto Ambiental e Alimentação</h4>
+                <ul>
+                    <li>O desmatamento de <strong>${formatarEquivalencia(m2Desmatados)} m²</strong> de floresta amazônica.
+                         <br><small style="opacity: 0.8;"><i>(Equivalente a <strong>${formatarEquivalencia(camposDeFutebol)}</strong> campos de futebol)</i></small>
+                    </li>
+                    <li>O carbono que <strong>${formatarEquivalencia(arvoresPorAno)} árvores</strong> adultas levam um ano para absorver.</li>
+                    <li>As emissões da produção de <strong>${formatarEquivalencia(kgDeCarne)} kg</strong> de carne bovina.</li>
+                </ul>
+
+                <h4 style="color: #4e94d8; border-bottom: 1px solid #444; padding-bottom: 5px; margin-top: 25px;">♻️ Reciclagem e Ações Positivas</h4>
+                <p style="font-size:0.9em; opacity:0.8; margin-top:-10px; margin-bottom:15px;">Esta mesma quantidade de emissão poderia ser <strong>evitada</strong> com ações como:</p>
+                 <ul>
+                    <li>🥫 Reciclar <strong>${formatarEquivalencia(latasAluminioRecicladas)} latinhas</strong> de alumínio.</li>
+                    <li>🍾 Reciclar <strong>${formatarEquivalencia(garrafasPetRecicladas)} garrafas PET</strong> de 500ml.</li>
+                    <li>📰 Reciclar <strong>${formatarEquivalencia(kgPapelReciclado)} kg</strong> de papel e papelão.</li>
+                </ul>
+
+                <p style="font-size: 0.8em; text-align: center; opacity: 0.7; margin-top:20px;"><i>* As equivalências são estimativas para fins ilustrativos.</i></p>
+            `;
+
+            areaComparativo.innerHTML = comparativoHtml;
+            areaComparativo.style.display = 'block';
+        }
+        // --- FIM DA ADIÇÃO ---
+
 
         function calcularEmissao(event) {
             event.preventDefault();
@@ -213,7 +306,7 @@
                     const emissaoCH4_eq = emissaoCH4_t * fatoresEmissao.gwp.ch4;
                     const emissaoN2O_eq = emissaoN2O_t * fatoresEmissao.gwp.n2o;
                     emissaoTotal_tco2e = emissaoCH4_eq + emissaoN2O_eq;
-                    
+
                     resultadoTotal.innerHTML = `<strong>${formatNumber(emissaoTotal_tco2e, 6)} tCO₂e</strong>`;
                     detalhesGases.innerHTML = `
                         <div class="gas-item">
@@ -231,18 +324,24 @@
                 quantidade = parseFloat(document.getElementById('distanciaDeslocamentoKm').value);
                 dadosAtividade = fatoresEmissao.deslocamento[tipo];
                 if (!dadosAtividade || isNaN(quantidade) || quantidade <= 0) { alert('Quantidade inválida.'); return; }
-                
+
                 emissaoTotal_tco2e = quantidade * dadosAtividade.fator;
                 textoResultado.innerHTML = `Para <strong>${dadosAtividade.nome}</strong>, uma atividade de <strong>${formatNumber(quantidade, 2)} ${dadosAtividade.unidade}</strong> resultou na emissão total de:`;
                 resultadoTotal.innerHTML = `<strong>${formatNumber(emissaoTotal_tco2e, 6)} tCO₂e</strong>`;
                 detalhesGases.innerHTML = `<div class="gas-item"><span class="gas-item-calc">${formatNumber(quantidade, 2)} km &times; ${dadosAtividade.fator.toFixed(6)} = <strong>${formatNumber(emissaoTotal_tco2e, 6)} tCO₂e</strong></span></div>`;
             }
-            
+
             areaResultado.style.display = 'block';
+
+            // --- INÍCIO DA ADIÇÃO: CHAMADA PARA EXIBIR COMPARATIVOS ---
+            if (emissaoTotal_tco2e > 0) {
+                exibirComparativos(emissaoTotal_tco2e);
+            }
+            // --- FIM DA ADIÇÃO ---
         }
 
         // --- EVENT LISTENERS ---
-        document.getElementById('dataAtual').textContent = new Date().toLocaleDateString('pt-BR');
+        //document.getElementById('dataAtual').textContent = new Date().toLocaleDateString('pt-BR');
         seletorCategoria.addEventListener('change', mostrarFormularioCategoria);
         seletorTipoViagem.addEventListener('change', atualizarFormViagem);
         formulario.addEventListener('submit', calcularEmissao);
