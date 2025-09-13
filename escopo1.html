@@ -8,7 +8,7 @@
         /* Estilos mantidos para consistência visual */
         body { font-family: sans-serif; line-height: 1.6; margin: 20px; background-color: #1e1e1e; color: #d4d4d4; }
         .container { max-width: 600px; margin: auto; padding: 20px; background-color: #252526; border: 1px solid #3c3c3c; border-radius: 10px; }
-        h1 { color: #4e94d8; }
+        h1 { color: #4e94d8; text-align: center;}
         .form-group { margin-bottom: 15px; }
         .dynamic-form-section { display: none; }
         label { display: block; margin-bottom: 5px; font-weight: bold; }
@@ -56,12 +56,28 @@
         .navegacao { display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; margin-bottom: 30px; margin-top: 15px; }
         .botao-nav { padding: 8px 18px; border: 1px solid #555; border-radius: 20px; color: #d4d4d4; text-decoration: none; transition: all 0.3s ease; }
         .botao-nav:hover { background-color: #4e94d8; border-color: #4e94d8; color: #ffffff; }
+
+        /* --- ESTILOS PARA A ÁREA DE COMPARAÇÃO --- */
+        #areaComparativo ul { list-style: none; padding-left: 0; }
+        #areaComparativo li { margin-bottom: 12px; font-size: 1.05em; }
     </style>
 </head>
 <body>
     <div class="container">
-        <h1>Calculadora de Emissões GEE <br>(Escopo 1)</h1>
-        <p>Calcule emissões diretas de combustíveis ou de gases de refrigeração.</p>
+<h1>Calculadora de Emissões de Gases do Efeito Estufa (Escopo 1)</h1>
+<p>
+    <strong>Escopo 1:</strong> São as emissões <strong>diretas</strong>, ou seja, aquelas liberadas na atmosfera por fontes que sua organização (ou você) possui ou controla.
+</p>
+
+<p>Pense em tudo que sua operação queima ou libera diretamente. Por exemplo:</p>
+<ul>
+    <li>A <strong>queima de combustível</strong> nos veículos da sua frota, em geradores ou caldeiras.</li>
+    <li><strong>Emissões fugitivas</strong>, como o gás que escapa de um equipamento de ar condicionado durante uma recarga.</li>
+</ul>
+
+<p>
+    Para começar, selecione abaixo o tipo de emissão que deseja calcular e informe os dados de consumo.
+</p>
 
         <form id="calculadoraForm">
             <div class="form-group">
@@ -105,7 +121,7 @@
                     <input type="number" id="quantidadeGas" step="0.01" min="0" placeholder="Ex: 0.8">
                 </div>
             </div>
-            
+
             <button type="submit">Calcular Emissão</button>
         </form>
 
@@ -115,7 +131,9 @@
             <div class="resultado-total" id="resultadoTotal"></div>
             <div class="detalhes-gases" id="detalhesGases"></div>
         </div>
-        
+
+        <div class="resultado" id="areaComparativo" style="background-color: #1c2b3a;">
+            </div>
         <br>
         <div class="navegacao">
              <a href="https://lagando.github.io/calculoGEE/escopo1.html" class="botao-nav">Escopo 1</a>
@@ -123,10 +141,15 @@
              <a href="https://lagando.github.io/calculoGEE/escopo3.html" class="botao-nav">Escopo 3</a>
              <a href="https://lagando.github.io/calculoGEE/evitadas.html" class="botao-nav">Emissões Evitadas</a>
         </div>
-            
+
         <footer>
-            <p>Feito por Gabriel Bahia - gabrielbahiapro@gmail.com</p>
-            <p id="dataAtual"></p>
+            <p><strong>O que é tCO₂e?</strong><br>
+            tCO₂e (tonelada de CO₂ equivalente) é a unidade de medida padrão que converte o impacto de aquecimento de todos os diferentes gases de efeito estufa em um único valor, como se tudo fosse dióxido de carbono.
+            <br><br><strong>E por que usar ele?</strong>
+            <br>Nós o usamos como base porque, como cada gás esquenta o planeta com uma "força" diferente, essa unidade nos permite somar todos eles em um resultado final único e fácil de comparar.</p>
+            <p>Feito por Gabriel Bahia - gabrielbahiapro@gmail.com<br>
+            <a href="https://www.linkedin.com/in/gabrielbahiagb/" target="_blank" style="color: #0077B5; font-weight: bold; text-decoration: underline; cursor: pointer;">- LinkedIn do pai (eu /gabrielbahiagb) -</a><br>
+            Atualizado em: 13/09/2025 - v5-HTML</p>
         </footer>
     </div>
 
@@ -162,11 +185,13 @@
         const detalhesGases = document.getElementById('detalhesGases');
         const seletorCombustivel = document.getElementById('tipoCombustivel');
         const labelUnidadeCombustivel = document.getElementById('unidadeCombustivel');
+        const areaComparativo = document.getElementById('areaComparativo');
 
         // --- FUNÇÕES ---
         function mostrarFormularioCategoria() {
             document.querySelectorAll('.dynamic-form-section').forEach(div => div.style.display = 'none');
             areaResultado.style.display = 'none';
+            areaComparativo.style.display = 'none';
             const categoria = seletorCategoria.value;
             if (categoria) {
                 const formId = 'form' + categoria.charAt(0).toUpperCase() + categoria.slice(1);
@@ -176,13 +201,99 @@
                 }
             }
         }
-        
+
         function atualizarUnidadeCombustivel() {
             const tipo = seletorCombustivel.value;
             if (tipo) {
                 labelUnidadeCombustivel.textContent = `Unidade: ${fatoresEmissao.combustiveis[tipo].unidade}`;
             }
         }
+
+        function formatarEquivalencia(valor) {
+            if (valor < 0.01 && valor > 0) return 'menos de 0,01';
+            if (valor >= 10 || valor === 0) return valor.toLocaleString('pt-BR', { maximumFractionDigits: 0 });
+            if (valor >= 1) return valor.toLocaleString('pt-BR', { minimumFractionDigits: 1, maximumFractionDigits: 1 });
+            return valor.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+        }
+
+        function exibirComparativos(emissao_tco2e) {
+             const TCO2E_POR_KM_CARRO_GASOLINA = 0.00025;
+             const TCO2E_SEQUESTRADO_POR_ARVORE_ANO = 0.022;
+             const TCO2E_POR_VOO_RIO_SP_IDA_E_VOLTA = 0.12;
+             const TCO2E_POR_BOTIJAO_GLP_13KG = 0.0383;
+             const TCO2E_POR_KG_CARNE_BOVINA = 0.060;
+             const M2_GELO_ARTICO_POR_TCO2E = 3;
+             const TCO2_EM_UM_BALAO_AR_QUENTE = 5.5;
+             const TCO2E_EVITADO_LATA_ALUMINIO = 0.000126;
+             const TCO2E_EVITADO_GARRAFA_PET = 0.000022;
+             const TCO2E_EVITADO_KG_PAPEL = 0.003;
+             const TCO2E_EVITADO_KG_ORGANICO_COMPOSTADO = 0.0006;
+             // --- INÍCIO DA ADIÇÃO: Novos Fatores Ambientais ---
+             const TCO2E_POR_M2_DESMATAMENTO_AMAZONIA = 0.066;
+             const TCO2E_POR_ARVORE_QUEIMADA = 0.9; // Estimativa para uma árvore de porte médio
+             // --- FIM DA ADIÇÃO ---
+
+             const kmDeCarro = emissao_tco2e / TCO2E_POR_KM_CARRO_GASOLINA;
+             const arvoresPorAno = emissao_tco2e / TCO2E_SEQUESTRADO_POR_ARVORE_ANO;
+             const voosRioSP = emissao_tco2e / TCO2E_POR_VOO_RIO_SP_IDA_E_VOLTA;
+             const botijoesDeGas = emissao_tco2e / TCO2E_POR_BOTIJAO_GLP_13KG;
+             const kgDeCarne = emissao_tco2e / TCO2E_POR_KG_CARNE_BOVINA;
+             const m2GeloArtico = emissao_tco2e * M2_GELO_ARTICO_POR_TCO2E;
+             const baloesDeArQuente = emissao_tco2e / TCO2_EM_UM_BALAO_AR_QUENTE;
+             const latasAluminioRecicladas = emissao_tco2e / TCO2E_EVITADO_LATA_ALUMINIO;
+             const garrafasPetRecicladas = emissao_tco2e / TCO2E_EVITADO_GARRAFA_PET;
+             const kgPapelReciclado = emissao_tco2e / TCO2E_EVITADO_KG_PAPEL;
+             const kgOrganicoCompostado = emissao_tco2e / TCO2E_EVITADO_KG_ORGANICO_COMPOSTADO;
+             // --- INÍCIO DA ADIÇÃO: Novos Cálculos Ambientais ---
+             const m2Desmatados = emissao_tco2e / TCO2E_POR_M2_DESMATAMENTO_AMAZONIA;
+             const camposDeFutebol = m2Desmatados / 7140;
+             const arvoresQueimadas = emissao_tco2e / TCO2E_POR_ARVORE_QUEIMADA;
+             // --- FIM DA ADIÇÃO ---
+
+
+            const comparativoHtml = `
+                <h3 style="text-align:center; color: #569cd6; margin-bottom: 20px;">Para ter uma ideia, essa emissão equivale a:</h3>
+
+                <h4 style="color: #4e94d8; border-bottom: 1px solid #444; padding-bottom: 5px;">🚗 Transporte</h4>
+                <ul>
+                    <li>Dirigir um carro a gasolina por <strong>${formatarEquivalencia(kmDeCarro)} km</strong>.</li>
+                    <li>Fazer <strong>${formatarEquivalencia(voosRioSP)}</strong> viagens de ida e volta na ponte aérea Rio-São Paulo.</li>
+                </ul>
+
+                <h4 style="color: #4e94d8; border-bottom: 1px solid #444; padding-bottom: 5px; margin-top: 25px;">🏠 Cotidiano e Curiosidades</h4>
+                <ul>
+                    <li>A queima de <strong>${formatarEquivalencia(botijoesDeGas)} botijões de gás</strong> de cozinha (GLP 13kg).</li>
+                    <li>As emissões da produção de <strong>${formatarEquivalencia(kgDeCarne)} kg</strong> de carne bovina.</li>
+                     <li>Encher <strong>${formatarEquivalencia(baloesDeArQuente)} balões de ar quente</strong> com o volume de CO₂ emitido.</li>
+                </ul>
+
+                <h4 style="color: #4e94d8; border-bottom: 1px solid #444; padding-bottom: 5px; margin-top: 25px;">🌳 Impacto Ambiental</h4>
+                <ul>
+                    <li>🔥 O desmatamento de <strong>${formatarEquivalencia(m2Desmatados)} m²</strong> de floresta amazônica.
+                         <br><small style="opacity: 0.8;"><i>(Equivalente a <strong>${formatarEquivalencia(camposDeFutebol)}</strong> campos de futebol)</i></small>
+                    </li>
+                    <li>🌲 A queima de aproximadamente <strong>${formatarEquivalencia(arvoresQueimadas)} árvores</strong>.</li>
+                    <li>O trabalho que <strong>${formatarEquivalencia(arvoresPorAno)} árvores</strong> adultas levam um ano para absorver (sequestrar) esse carbono.</li>
+                    <li>Uma perda de <strong>${formatarEquivalencia(m2GeloArtico)} m²</strong> de gelo no Ártico.</li>
+                </ul>
+
+                <h4 style="color: #4e94d8; border-bottom: 1px solid #444; padding-bottom: 5px; margin-top: 25px;">♻️ Reciclagem e Ações Positivas</h4>
+                <p style="font-size:0.9em; opacity:0.8; margin-top:-10px; margin-bottom:15px;">Esta mesma quantidade de emissão poderia ser <strong>evitada</strong> com ações como:</p>
+                 <ul>
+                    <li>🥫 Reciclar <strong>${formatarEquivalencia(latasAluminioRecicladas)} latinhas</strong> de alumínio.</li>
+                    <li>🍾 Reciclar <strong>${formatarEquivalencia(garrafasPetRecicladas)} garrafas PET</strong> de 500ml.</li>
+                    <li>📰 Reciclar <strong>${formatarEquivalencia(kgPapelReciclado)} kg</strong> de papel e papelão.</li>
+                    <li>🥕 Composter <strong>${formatarEquivalencia(kgOrganicoCompostado)} kg</strong> de resíduos orgânicos (evitando a geração de metano no aterro).</li>
+                </ul>
+
+
+                <p style="font-size: 0.8em; text-align: center; opacity: 0.7; margin-top:20px;"><i>* As equivalências são estimativas para fins ilustrativos.</i></p>
+            `;
+
+            areaComparativo.innerHTML = comparativoHtml;
+            areaComparativo.style.display = 'block';
+        }
+
 
         function calcularEmissao(event) {
             event.preventDefault();
@@ -192,7 +303,7 @@
                 return;
             }
 
-            let quantidade, dadosAtividade;
+            let quantidade, dadosAtividade, emissaoTotal_tco2e = 0;
             const formatNumber = (num, decimals) => num.toLocaleString('pt-BR', { minimumFractionDigits: decimals, maximumFractionDigits: decimals });
 
             if (categoria === 'combustiveis') {
@@ -202,22 +313,21 @@
                 if (!dadosAtividade || isNaN(quantidade) || quantidade <= 0) {
                     alert('Por favor, preencha os campos com valores válidos e positivos.');
                     areaResultado.style.display = 'none';
+                    areaComparativo.style.display = 'none';
                     return;
                 }
 
-                // Calcula a emissão de cada gás em TONELADAS
                 const emissaoCO2 = (quantidade * dadosAtividade.co2) / 1000;
                 const emissaoCH4 = (quantidade * dadosAtividade.ch4) / 1000;
                 const emissaoN2O = (quantidade * dadosAtividade.n2o) / 1000;
 
-                // Converte para CO2 equivalente em TONELADAS
                 const emissaoCH4_eq = emissaoCH4 * fatoresEmissao.gwp.ch4;
                 const emissaoN2O_eq = emissaoN2O * fatoresEmissao.gwp.n2o;
-                const emissaoTotal_tco2e = emissaoCO2 + emissaoCH4_eq + emissaoN2O_eq;
-                
+                emissaoTotal_tco2e = emissaoCO2 + emissaoCH4_eq + emissaoN2O_eq;
+
                 textoResultado.innerHTML = `O consumo de <strong>${formatNumber(quantidade, 2)} ${dadosAtividade.unidade}</strong> de <strong>${dadosAtividade.nome}</strong> resultou na emissão total de:`;
                 resultadoTotal.innerHTML = `<strong>${formatNumber(emissaoTotal_tco2e, 6)} tCO₂e</strong>`;
-                
+
                 detalhesGases.innerHTML = `
                     <div class="gas-item">
                         <span class="gas-item-title">CO₂ (Dióxido de Carbono)</span>
@@ -240,11 +350,12 @@
                 if (!dadosAtividade || isNaN(quantidade) || quantidade <= 0) {
                     alert('Por favor, preencha os campos com valores válidos e positivos.');
                     areaResultado.style.display = 'none';
+                    areaComparativo.style.display = 'none';
                     return;
                 }
-                
-                const emissaoTotal_tco2e = (quantidade * dadosAtividade.gwp) / 1000;
-                
+
+                emissaoTotal_tco2e = (quantidade * dadosAtividade.gwp) / 1000;
+
                 textoResultado.innerHTML = `A recarga de <strong>${formatNumber(quantidade, 2)} ${dadosAtividade.unidade}</strong> de <strong>${dadosAtividade.nome}</strong> resultou na emissão de:`;
                 resultadoTotal.innerHTML = `<strong>${formatNumber(emissaoTotal_tco2e, 6)} tCO₂e</strong>`;
                 detalhesGases.innerHTML = `
@@ -256,14 +367,17 @@
             }
 
             areaResultado.style.display = 'block';
+
+            if (emissaoTotal_tco2e > 0) {
+                exibirComparativos(emissaoTotal_tco2e);
+            }
         }
 
         // --- EVENT LISTENERS ---
-        document.getElementById('dataAtual').textContent = new Date().toLocaleDateString('pt-BR');
+        //document.getElementById('dataAtual').textContent = new Date().toLocaleDateString('pt-BR');
         seletorCategoria.addEventListener('change', mostrarFormularioCategoria);
         seletorCombustivel.addEventListener('change', atualizarUnidadeCombustivel);
         formulario.addEventListener('submit', calcularEmissao);
     </script>
 </body>
 </html>
-
