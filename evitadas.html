@@ -29,20 +29,20 @@
     <div class="container">
 <h1>Calculadora de Emissões Evitadas</h1>
 <p>
-    <strong>Emissões Evitadas</strong> são os gases de efeito estufa que <strong>deixam de ser lançados</strong> na atmosfera graças a uma ação positiva, como a reciclagem.
+    <strong>Emissões Evitadas</strong> são os gases de efeito estufa que <strong>deixam de ser lançados</strong> na atmosfera graças a uma ação positiva, como a reciclagem ou a geração de energia limpa.
 </p>
 <p>
-    Quando reciclamos, economizamos a energia e os recursos que seriam gastos para criar um produto do zero. Essa economia de processo representa um enorme benefício para o clima.
+    Ao reciclar ou injetar energia limpa na rede, economizamos recursos e evitamos que fontes mais poluentes sejam utilizadas.
 </p>
 <p>
-    Selecione o material, informe o peso que você reciclou e descubra o tamanho do impacto positivo que sua ação gerou!
+    Selecione o item, informe a quantidade e descubra o tamanho do impacto positivo que sua ação gerou!
 </p>
 
         <form id="calculadoraForm">
             <div class="form-group">
-                <label for="material">Material Reciclado:</label>
+                <label for="material">Material ou Fonte:</label>
                 <select id="material" name="material" required>
-                    <option value="">-- Selecione o Material --</option>
+                    <option value="">-- Selecione o Item --</option>
                     <option value="papel">Papel, papelão e embalagens longa vida</option>
                     <option value="plastico">Plástico</option>
                     <option value="vidro">Vidro</option>
@@ -50,12 +50,13 @@
                     <option value="aluminio">Metais não ferrosos (Alumínio)</option>
                     <option value="entulho">Entulho da Construção Civil</option>
                     <option value="pneus">Pneus</option>
+                    <option value="energiaSolar">Energia Solar (Injetada na Rede)</option>
                 </select>
             </div>
 
             <div class="form-group">
-                <label for="peso">Peso do Material Reciclado (em toneladas):</label>
-                <input type="number" id="peso" name="peso" step="0.01" min="0" required placeholder="Ex: 2.5">
+                <label for="peso" id="labelInput">Peso do Material Reciclado (em toneladas):</label>
+                <input type="number" id="peso" name="peso" step="0.0001" min="0" required placeholder="Ex: 2.5">
             </div>
 
             <button type="submit">Calcular Emissões Evitadas</button>
@@ -89,56 +90,80 @@
 
     <script>
         // --- TABELA DE DADOS ---
-        // Fatores de Emissões Evitadas em tCO₂e / tonelada de material reciclado.
-        // Fonte: Planilha GRSGEECalculadora (baseada em GHG Protocol / Ipea).
+        // Fatores de Emissões Evitadas.
+        // Adicionamos propriedades 'unidade' e 'acao' para tornar o texto dinâmico.
         const fatoresEmissaoEvitada = {
-            papel:          { fator: 1.3, nome: 'Papel/Papelão' },
-            plastico:       { fator: 1.1, nome: 'Plástico' },
-            vidro:          { fator: 0.3, nome: 'Vidro' },
-            metaisFerrosos: { fator: 1.8, nome: 'Metais Ferrosos (Aço)' },
-            aluminio:       { fator: 9.2, nome: 'Alumínio' },
-            entulho:        { fator: 0.009, nome: 'Entulho' },
-            pneus:          { fator: 0.3, nome: 'Pneus' }
+            papel:          { fator: 1.3,   nome: 'Papel/Papelão',       unidade: 'toneladas', acao: 'A reciclagem de' },
+            plastico:       { fator: 1.1,   nome: 'Plástico',            unidade: 'toneladas', acao: 'A reciclagem de' },
+            vidro:          { fator: 0.3,   nome: 'Vidro',               unidade: 'toneladas', acao: 'A reciclagem de' },
+            metaisFerrosos: { fator: 1.8,   nome: 'Metais Ferrosos',     unidade: 'toneladas', acao: 'A reciclagem de' },
+            aluminio:       { fator: 9.2,   nome: 'Alumínio',            unidade: 'toneladas', acao: 'A reciclagem de' },
+            entulho:        { fator: 0.009, nome: 'Entulho',             unidade: 'toneladas', acao: 'A reciclagem de' },
+            pneus:          { fator: 0.3,   nome: 'Pneus',               unidade: 'toneladas', acao: 'A reciclagem de' },
+            
+            // Fator médio do SIN (Sistema Interligado Nacional) aprox 0.086 tCO2e/MWh (pode variar anualmente)
+            energiaSolar:   { fator: 0.086, nome: 'Energia Solar',       unidade: 'MWh',       acao: 'A geração de' }
         };
 
         // --- REFERÊNCIAS AOS ELEMENTOS HTML ---
         const seletorMaterial = document.getElementById('material');
         const campoPeso = document.getElementById('peso');
+        const labelInput = document.getElementById('labelInput'); // Novo ID para manipular o texto do label
         const formulario = document.getElementById('calculadoraForm');
         const areaResultado = document.getElementById('areaResultado');
         const textoResultado = document.getElementById('textoResultado');
         const resultadoTotal = document.getElementById('resultadoTotal');
         const demonstracaoCalculo = document.getElementById('demonstracaoCalculo');
 
-        // --- FUNÇÕES ---
+        // --- FUNÇÃO PARA MUDAR O TEXTO DO FORMULÁRIO DINAMICAMENTE ---
+        seletorMaterial.addEventListener('change', function() {
+            const item = fatoresEmissaoEvitada[this.value];
+            
+            // Se o usuário selecionou algo válido
+            if (item) {
+                // Se for Energia Solar, muda para MWh
+                if (item.unidade === 'MWh') {
+                    labelInput.innerText = `Energia Injetada na Rede (em ${item.unidade}):`;
+                    campoPeso.placeholder = "Ex: 1.5 (equivale a 1500 kWh)";
+                } else {
+                    // Se for material, volta para Toneladas
+                    labelInput.innerText = `Peso do Material Reciclado (em ${item.unidade}):`;
+                    campoPeso.placeholder = "Ex: 2.5";
+                }
+            }
+        });
 
+        // --- FUNÇÃO DE CÁLCULO ---
         function calcularEmissao(event) {
             event.preventDefault();
 
             const tipoMaterial = seletorMaterial.value;
-            const peso = parseFloat(campoPeso.value);
+            const valorInput = parseFloat(campoPeso.value);
 
-            if (!tipoMaterial || isNaN(peso) || peso <= 0) {
-                alert('Por favor, selecione um material e insira um peso válido e positivo.');
+            if (!tipoMaterial || isNaN(valorInput) || valorInput <= 0) {
+                alert('Por favor, selecione um item e insira um valor válido e positivo.');
                 areaResultado.style.display = 'none';
                 return;
             }
 
-            const dadosMaterial = fatoresEmissaoEvitada[tipoMaterial];
-            const fator = dadosMaterial.fator;
-            const emissao_evitada_tco2e = peso * fator;
+            const dados = fatoresEmissaoEvitada[tipoMaterial];
+            const fator = dados.fator;
+            const emissao_evitada_tco2e = valorInput * fator;
 
             const formatNumber = (num, decimals) => num.toLocaleString('pt-BR', { minimumFractionDigits: decimals, maximumFractionDigits: decimals });
 
-            // Exibe os resultados
-            textoResultado.innerHTML = `A reciclagem de <strong>${formatNumber(peso, 2)} toneladas</strong> de <strong>${dadosMaterial.nome}</strong> resultou em:`;
+            // Exibe os resultados usando os textos dinâmicos (Reciclagem vs Geração)
+            textoResultado.innerHTML = `${dados.acao} <strong>${formatNumber(valorInput, 2)} ${dados.unidade}</strong> de <strong>${dados.nome}</strong> resultou em:`;
+            
             resultadoTotal.innerHTML = `<strong>${formatNumber(emissao_evitada_tco2e, 4)} tCO₂e</strong> evitadas`;
-            demonstracaoCalculo.innerHTML = `${formatNumber(peso, 2)} t &times; ${formatNumber(fator, 3)} tCO₂e/t = ${formatNumber(emissao_evitada_tco2e, 4)} tCO₂e`;
+            
+            // Ajusta a demonstração do cálculo para mostrar a unidade correta
+            demonstracaoCalculo.innerHTML = `${formatNumber(valorInput, 2)} ${dados.unidade} &times; ${formatNumber(fator, 3)} tCO₂e/${dados.unidade} = ${formatNumber(emissao_evitada_tco2e, 4)} tCO₂e`;
+            
             areaResultado.style.display = 'block';
         }
 
-        // --- EVENT LISTENERS ---
-        //document.getElementById('dataAtual').textContent = new Date().toLocaleDateString('pt-BR');
+        // --- EVENT LISTENER ---
         formulario.addEventListener('submit', calcularEmissao);
     </script>
 </body>
