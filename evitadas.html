@@ -5,61 +5,112 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Calculadora de Emissões Evitadas</title>
     <style>
-        /* Estilos aprimorados e consistentes */
-        body { font-family: sans-serif; line-height: 1.6; margin: 20px; background-color: #1e1e1e; color: #d4d4d4; }
-        .container { max-width: 600px; margin: auto; padding: 20px; background-color: #252526; border: 1px solid #3c3c3c; border-radius: 10px; }
-        h1 { color: #4e94d8; text-align: center;}
-        .form-group { margin-bottom: 15px; }
-        label { display: block; margin-bottom: 5px; font-weight: bold; }
-        input[type="number"], select, button { padding: 10px; border-radius: 5px; border: 1px solid #3c3c3c; width: 100%; box-sizing: border-box; background-color: #3c3c3c; color: #d4d4d4; }
-        button { background-color: #218838; color: white; cursor: pointer; font-weight: bold; margin-top: 15px; border-color: #218838; }
+        /* --- ESTILOS GERAIS (Dark Mode) --- */
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; line-height: 1.6; margin: 20px; background-color: #1e1e1e; color: #d4d4d4; }
+        .container { max-width: 600px; margin: auto; padding: 25px; background-color: #252526; border: 1px solid #3c3c3c; border-radius: 10px; box-shadow: 0 4px 15px rgba(0,0,0,0.3); }
+
+        h1 { color: #4e94d8; text-align: center; margin-bottom: 10px; }
+        p { margin-bottom: 15px; }
+
+        /* Formulário */
+        .form-group { margin-bottom: 20px; }
+        label { display: block; margin-bottom: 8px; font-weight: 600; color: #e1e1e1; }
+
+        input[type="number"], input[type="month"], select {
+            padding: 12px; border-radius: 6px; border: 1px solid #3c3c3c;
+            width: 100%; box-sizing: border-box; background-color: #3c3c3c;
+            color: #fff; font-size: 1em; transition: border 0.3s;
+        }
+        input:focus, select:focus { border-color: #4e94d8; outline: none; }
+
+        /* Botão Calcular */
+        button {
+            background-color: #218838; color: white; cursor: pointer; font-weight: bold;
+            padding: 12px; width: 100%; border: none; border-radius: 6px;
+            font-size: 1.1em; transition: background 0.3s; margin-top: 10px;
+        }
         button:hover { background-color: #1e7e34; }
-        .resultado { margin-top: 20px; padding: 15px; background-color: #1c3d25; border: 1px solid #285734; border-radius: 5px; display: none; }
-        .resultado h2 { margin-top: 0; }
-        .resultado-total { text-align: center; font-size: 1.8em; margin: 10px 0 25px 0; color: #ffffff; }
-        .demonstracao-calculo { background-color: rgba(0,0,0,0.2); padding: 15px; border-radius: 5px; font-family: monospace; text-align: center; font-size: 1.1em; border-left: 3px solid #28a745; }
-        strong { color: #35b056; }
-        footer { text-align: center; margin-top: 30px; font-size: 0.9em; color: #888; }
-        .navegacao { display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; margin-bottom: 30px; margin-top: 15px; }
-        .botao-nav { padding: 8px 18px; border: 1px solid #555; border-radius: 20px; color: #d4d4d4; text-decoration: none; transition: all 0.3s ease; }
+        button:disabled { background-color: #555; cursor: not-allowed; }
+
+        /* Áreas Dinâmicas */
+        .hidden { display: none !important; } /* Forcei o hidden */
+        .box-energia {
+            background-color: #2d2d30; padding: 15px; border-radius: 8px;
+            border-left: 4px solid #4e94d8; margin-bottom: 20px;
+        }
+        .datas-row { display: flex; gap: 15px; }
+        .datas-row div { flex: 1; }
+
+        /* Resultado */
+        .resultado { margin-top: 25px; padding: 20px; background-color: #1c3d25; border: 1px solid #285734; border-radius: 8px; display: none; animation: fadeIn 0.5s; }
+        .resultado h2 { margin-top: 0; font-size: 1.4em; color: #fff; }
+        .resultado-total { text-align: center; font-size: 2em; margin: 15px 0; color: #4eff8a; font-weight: bold; text-shadow: 0 0 10px rgba(78, 255, 138, 0.2); }
+        .demonstracao-calculo { background-color: rgba(0,0,0,0.3); padding: 15px; border-radius: 5px; font-family: monospace; font-size: 0.95em; border-left: 3px solid #28a745; margin-top: 15px; }
+
+        /* Rodapé e Navegação */
+        strong { color: #4e94d8; }
+        .destaque-verde { color: #35b056; }
+        footer { text-align: center; margin-top: 40px; font-size: 0.85em; color: #888; border-top: 1px solid #333; padding-top: 20px; }
+        .navegacao { display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; margin: 30px 0; }
+        .botao-nav { padding: 8px 18px; border: 1px solid #555; border-radius: 20px; color: #d4d4d4; text-decoration: none; transition: all 0.3s ease; font-size: 0.9em; }
         .botao-nav:hover { background-color: #4e94d8; border-color: #4e94d8; color: #ffffff; }
+
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
     </style>
 </head>
 <body>
     <div class="container">
-<h1>Calculadora de Emissões Evitadas</h1>
-<p>
-    <strong>Emissões Evitadas</strong> são os gases de efeito estufa que <strong>deixam de ser lançados</strong> na atmosfera graças a uma ação positiva, como a reciclagem ou a geração de energia limpa.
-</p>
-<p>
-    Ao reciclar ou injetar energia limpa na rede, economizamos recursos e evitamos que fontes mais poluentes sejam utilizadas.
-</p>
-<p>
-    Selecione o item, informe a quantidade e descubra o tamanho do impacto positivo que sua ação gerou!
-</p>
+        <h1>Calculadora de Emissões Evitadas</h1>
+        <p>Selecione o material reciclado ou a fonte de energia para calcular o impacto positivo (emissões de CO₂e evitadas) da sua ação.</p>
 
         <form id="calculadoraForm">
             <div class="form-group">
                 <label for="material">Material ou Fonte:</label>
                 <select id="material" name="material" required>
-                    <option value="">-- Selecione o Item --</option>
-                    <option value="papel">Papel, papelão e embalagens longa vida</option>
-                    <option value="plastico">Plástico</option>
-                    <option value="vidro">Vidro</option>
-                    <option value="metaisFerrosos">Metais ferrosos (Aço)</option>
-                    <option value="aluminio">Metais não ferrosos (Alumínio)</option>
-                    <option value="entulho">Entulho da Construção Civil</option>
-                    <option value="pneus">Pneus</option>
-                    <option value="energiaSolar">Energia Solar (Injetada na Rede)</option>
+                    <option value="">-- Selecione --</option>
+                    <optgroup label="Reciclagem de Materiais">
+                        <option value="papel">Papel, papelão e embalagens longa vida</option>
+                        <option value="plastico">Plástico</option>
+                        <option value="vidro">Vidro</option>
+                        <option value="metaisFerrosos">Metais ferrosos (Aço)</option>
+                        <option value="aluminio">Metais não ferrosos (Alumínio)</option>
+                        <option value="entulho">Entulho da Construção Civil</option>
+                        <option value="pneus">Pneus</option>
+                    </optgroup>
+                    <optgroup label="Energia Renovável">
+                        <option value="energiaSolar">Energia Solar (Período Completo)</option>
+                        <option value="energiaSolarSimples">Energia Solar SIMPLIFICADA (1 Mês)</option>
+                    </optgroup>
                 </select>
             </div>
 
-            <div class="form-group">
-                <label for="peso" id="labelInput">Peso do Material Reciclado (em toneladas):</label>
-                <input type="number" id="peso" name="peso" step="0.0001" min="0" required placeholder="Ex: 2.5">
+            <div id="divInputMaterial" class="form-group">
+                <label for="peso">Peso do Material (toneladas):</label>
+                <input type="number" id="peso" step="0.0001" min="0" placeholder="Ex: 2.5">
             </div>
 
-            <button type="submit">Calcular Emissões Evitadas</button>
+            <div id="divInputEnergia" class="hidden box-energia">
+                <p style="margin-top:0; font-size:0.9em; color:#aaa;">Dados do Sistema Interligado Nacional (MCTI)</p>
+
+                <div class="datas-row">
+                    <div class="form-group">
+                        <label for="dataInicio" id="labelDataInicio">Início (Mês/Ano):</label>
+                        <input type="month" id="dataInicio">
+                    </div>
+                    <div class="form-group" id="containerDataFim">
+                        <label for="dataFim">Fim (Mês/Ano):</label>
+                        <input type="month" id="dataFim">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="kwh">Energia Total Injetada (kWh):</label>
+                    <input type="number" id="kwh" step="1" min="0" placeholder="Ex: 350">
+                </div>
+                <div id="msgCarregando" style="font-size: 0.8em; color: #4e94d8;">Carregando fatores de emissão...</div>
+            </div>
+
+            <button type="submit" id="btnCalcular">Calcular Emissões Evitadas</button>
         </form>
 
         <div class="resultado" id="areaResultado">
@@ -69,7 +120,6 @@
             <div class="demonstracao-calculo" id="demonstracaoCalculo"></div>
         </div>
 
-        <br>
         <div class="navegacao">
              <a href="https://lagando.github.io/calculoGEE/escopo1.html" class="botao-nav">Escopo 1</a>
              <a href="https://lagando.github.io/calculoGEE/escopo2.html" class="botao-nav">Escopo 2</a>
@@ -78,96 +128,229 @@
         </div>
 
         <footer>
-            <p><strong>O que é tCO₂e?</strong><br>
-            tCO₂e (tonelada de CO₂ equivalente) é a unidade de medida padrão que converte o impacto de aquecimento de todos os diferentes gases de efeito estufa em um único valor, como se tudo fosse dióxido de carbono.
-            <br><br><strong>E por que usar ele?</strong>
-            <br>Nós o usamos como base porque, como cada gás esquenta o planeta com uma "força" diferente, essa unidade nos permite somar todos eles em um resultado final único e fácil de comparar.</p>
+            <p><strong>Fonte dos Dados:</strong> Reciclagem (IPEA/GHG Protocol) | Energia (Fator Médio do SIN/MCTI via API).</p>
             <p>Feito por Gabriel Bahia - gabrielbahiapro@gmail.com<br>
-            <a href="https://www.linkedin.com/in/gabrielbahiagb/" target="_blank" style="color: #0077B5; font-weight: bold; text-decoration: underline; cursor: pointer;">- LinkedIn do pai (eu /gabrielbahiagb) -</a><br>
-            Atualizado em: 13/09/2025 - v5-HTML</p>
+            Atualizado em: 02/12/2025 - v7-Simplificada</p>
         </footer>
     </div>
 
     <script>
-        // --- TABELA DE DADOS ---
-        // Ajustamos a unidade e o fator da Energia Solar para kWh.
-        const fatoresEmissaoEvitada = {
-            papel:          { fator: 1.3,   nome: 'Papel/Papelão',       unidade: 'toneladas', acao: 'A reciclagem de' },
-            plastico:       { fator: 1.1,   nome: 'Plástico',            unidade: 'toneladas', acao: 'A reciclagem de' },
-            vidro:          { fator: 0.3,   nome: 'Vidro',               unidade: 'toneladas', acao: 'A reciclagem de' },
-            metaisFerrosos: { fator: 1.8,   nome: 'Metais Ferrosos',     unidade: 'toneladas', acao: 'A reciclagem de' },
-            aluminio:       { fator: 9.2,   nome: 'Alumínio',            unidade: 'toneladas', acao: 'A reciclagem de' },
-            entulho:        { fator: 0.009, nome: 'Entulho',             unidade: 'toneladas', acao: 'A reciclagem de' },
-            pneus:          { fator: 0.3,   nome: 'Pneus',               unidade: 'toneladas', acao: 'A reciclagem de' },
-            
-            // Fator de Emissão: 0.000086 tCO₂e/kWh
-            // (0.086 tCO₂e/MWh dividido por 1000)
-            energiaSolar:   { fator: 0.000086, nome: 'Energia Solar',       unidade: 'kWh',       acao: 'A geração de' }
+        // --- 1. CONFIGURAÇÃO E DADOS ---
+        const fatoresReciclagem = {
+            papel:          { fator: 1.3,     nome: 'Papel/Papelão',       unidade: 'toneladas', acao: 'A reciclagem de' },
+            plastico:       { fator: 1.1,     nome: 'Plástico',            unidade: 'toneladas', acao: 'A reciclagem de' },
+            vidro:          { fator: 0.3,     nome: 'Vidro',               unidade: 'toneladas', acao: 'A reciclagem de' },
+            metaisFerrosos: { fator: 1.8,     nome: 'Metais Ferrosos',     unidade: 'toneladas', acao: 'A reciclagem de' },
+            aluminio:       { fator: 9.2,     nome: 'Alumínio',            unidade: 'toneladas', acao: 'A reciclagem de' },
+            entulho:        { fator: 0.009,   nome: 'Entulho',             unidade: 'toneladas', acao: 'A reciclagem de' },
+            pneus:          { fator: 0.3,     nome: 'Pneus',               unidade: 'toneladas', acao: 'A reciclagem de' }
         };
 
-        // --- REFERÊNCIAS AOS ELEMENTOS HTML ---
+        let fatoresEnergiaMensal = null;
+        let minDateStr = "";
+        let maxDateStr = "";
+
+        // --- 2. ELEMENTOS DO DOM ---
         const seletorMaterial = document.getElementById('material');
-        const campoPeso = document.getElementById('peso');
-        const labelInput = document.getElementById('labelInput');
-        const formulario = document.getElementById('calculadoraForm');
+        const divMaterial = document.getElementById('divInputMaterial');
+        const divEnergia = document.getElementById('divInputEnergia');
+
+        // Elementos específicos da Energia
+        const containerDataFim = document.getElementById('containerDataFim');
+        const labelDataInicio = document.getElementById('labelDataInicio');
+
+        const inpPeso = document.getElementById('peso');
+        const inpInicio = document.getElementById('dataInicio');
+        const inpFim = document.getElementById('dataFim');
+        const inpKwh = document.getElementById('kwh');
+        const msgCarregando = document.getElementById('msgCarregando');
+        const btnCalcular = document.getElementById('btnCalcular');
+
         const areaResultado = document.getElementById('areaResultado');
         const textoResultado = document.getElementById('textoResultado');
         const resultadoTotal = document.getElementById('resultadoTotal');
         const demonstracaoCalculo = document.getElementById('demonstracaoCalculo');
 
-        // --- FUNÇÃO PARA MUDAR O TEXTO DO FORMULÁRIO DINAMICAMENTE ---
+        // --- 3. CARREGAMENTO JSON ---
+        async function carregarFatoresEnergia() {
+            try {
+                const response = await fetch('https://lagando.github.io/calculoGEE/fatores.json');
+                if (!response.ok) throw new Error('Erro na rede');
+                fatoresEnergiaMensal = await response.json();
+                configurarLimitesDatas();
+                msgCarregando.style.display = 'none';
+            } catch (error) {
+                console.error("Erro ao carregar JSON:", error);
+                msgCarregando.innerHTML = "<span style='color:red'>Erro ao carregar fatores online. Verifique sua conexão.</span>";
+                btnCalcular.disabled = true;
+            }
+        }
+
+        function configurarLimitesDatas() {
+            const anos = Object.keys(fatoresEnergiaMensal).map(Number).sort((a,b) => a-b);
+            const anoMin = anos[0];
+            const anoMax = anos[anos.length - 1];
+
+            // Lógica para pegar o último mês disponível do último ano
+            const mesesUltimoAno = Object.keys(fatoresEnergiaMensal[anoMax]).map(Number).sort((a,b)=>a-b);
+            const mesMax = mesesUltimoAno[mesesUltimoAno.length - 1];
+            const formatMonth = (m) => m < 10 ? `0${m}` : m;
+
+            minDateStr = `${anoMin}-01`;
+            maxDateStr = `${anoMax}-${formatMonth(mesMax)}`;
+
+            inpInicio.min = minDateStr;
+            inpInicio.max = maxDateStr;
+            inpFim.min = minDateStr;
+            inpFim.max = maxDateStr;
+            inpFim.value = maxDateStr;
+        }
+
+        carregarFatoresEnergia();
+
+        // --- 4. CONTROLE DE INTERFACE (VISIBILIDADE) ---
         seletorMaterial.addEventListener('change', function() {
-            const item = fatoresEmissaoEvitada[this.value];
-            
-            if (item) {
-                // Se for Energia Solar, muda para kWh
-                if (item.unidade === 'kWh') {
-                    labelInput.innerText = `Energia Injetada na Rede (em ${item.unidade}):`;
-                    campoPeso.placeholder = "Ex: 1500";
+            areaResultado.style.display = 'none';
+            const tipo = this.value;
+
+            // 1. Caso seja Reciclagem (Padrão)
+            if (tipo !== 'energiaSolar' && tipo !== 'energiaSolarSimples') {
+                divMaterial.classList.remove('hidden');
+                divEnergia.classList.add('hidden');
+                inpPeso.required = true;
+                inpInicio.required = false;
+                inpFim.required = false;
+                inpKwh.required = false;
+            }
+            // 2. Caso seja Energia
+            else {
+                divMaterial.classList.add('hidden');
+                divEnergia.classList.remove('hidden');
+                inpPeso.required = false;
+                inpInicio.required = true;
+                inpKwh.required = true;
+
+                // Lógica Simplificada vs Completa
+                if (tipo === 'energiaSolarSimples') {
+                    // Esconde Data Fim
+                    containerDataFim.classList.add('hidden');
+                    labelDataInicio.innerText = "Mês de Referência:";
+                    inpFim.required = false;
                 } else {
-                    // Se for material, volta para Toneladas
-                    labelInput.innerText = `Peso do Material Reciclado (em ${item.unidade}):`;
-                    campoPeso.placeholder = "Ex: 2.5";
+                    // Mostra Data Fim
+                    containerDataFim.classList.remove('hidden');
+                    labelDataInicio.innerText = "Início (Mês/Ano):";
+                    inpFim.required = true;
                 }
             }
         });
 
-        // --- FUNÇÃO DE CÁLCULO ---
-        function calcularEmissao(event) {
-            event.preventDefault();
+        // --- 5. LÓGICA DE CÁLCULO ---
+        document.getElementById('calculadoraForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const tipo = seletorMaterial.value;
 
-            const tipoMaterial = seletorMaterial.value;
-            const valorInput = parseFloat(campoPeso.value);
+            if (tipo === 'energiaSolar' || tipo === 'energiaSolarSimples') {
+                calcularEnergia(tipo);
+            } else {
+                calcularReciclagem(tipo);
+            }
+        });
 
-            if (!tipoMaterial || isNaN(valorInput) || valorInput <= 0) {
-                alert('Por favor, selecione um item e insira um valor válido e positivo.');
-                areaResultado.style.display = 'none';
-                return;
+        function calcularReciclagem(tipo) {
+            const peso = parseFloat(inpPeso.value);
+            if (!tipo || isNaN(peso) || peso <= 0) {
+                alert("Preencha o peso corretamente."); return;
+            }
+            const dados = fatoresReciclagem[tipo];
+            const emissao = peso * dados.fator;
+            exibirResultado(dados.acao, peso, dados.unidade, dados.nome, dados.fator, emissao);
+        }
+
+        function calcularEnergia(tipo) {
+            if (!fatoresEnergiaMensal) { alert("Aguarde o carregamento dos dados."); return; }
+
+            const kwh = parseFloat(inpKwh.value);
+            let dataIni = inpInicio.value;
+            let dataFim = inpFim.value;
+
+            // Lógica CRUCIAL: Se for simplificado, Data Fim = Data Início
+            if (tipo === 'energiaSolarSimples') {
+                dataFim = dataIni;
             }
 
-            const dados = fatoresEmissaoEvitada[tipoMaterial];
-            const fator = dados.fator;
-            const emissao_evitada_tco2e = valorInput * fator;
+            if (isNaN(kwh) || kwh <= 0 || !dataIni) {
+                alert("Preencha os campos corretamente."); return;
+            }
+            // Verifica data fim apenas se não for simples (embora a lógica acima garanta igualdade)
+            if (dataIni > dataFim) {
+                alert("A data de início não pode ser maior que a data fim."); return;
+            }
 
-            // Função de formatação, agora com mais casas decimais para o fator da energia
-            const formatNumber = (num, decimals) => num.toLocaleString('pt-BR', { minimumFractionDigits: decimals, maximumFractionDigits: decimals });
-            
-            // Define a precisão do fator no display de cálculo
-            const fatorDecimals = (dados.unidade === 'kWh') ? 6 : 3;
+            // Loop de Soma (funciona igual para 1 mês ou vários)
+            let [anoAtual, mesAtual] = dataIni.split('-').map(Number);
+            let [anoFimNum, mesFimNum] = dataFim.split('-').map(Number);
 
-            // Exibe os resultados usando os textos dinâmicos (Reciclagem vs Geração)
-            textoResultado.innerHTML = `${dados.acao} <strong>${formatNumber(valorInput, 2)} ${dados.unidade}</strong> de <strong>${dados.nome}</strong> resultou em:`;
-            
-            resultadoTotal.innerHTML = `<strong>${formatNumber(emissao_evitada_tco2e, 6)} tCO₂e</strong> evitadas`;
-            
-            // Ajusta a demonstração do cálculo para mostrar a unidade e fator correto
-            demonstracaoCalculo.innerHTML = `${formatNumber(valorInput, 2)} ${dados.unidade} &times; ${formatNumber(fator, fatorDecimals)} tCO₂e/${dados.unidade} = ${formatNumber(emissao_evitada_tco2e, 6)} tCO₂e`;
-            
+            let somaFatores = 0;
+            let mesesContados = 0;
+
+            while (anoAtual < anoFimNum || (anoAtual === anoFimNum && mesAtual <= mesFimNum)) {
+                let fatorMes = 0;
+                // Tenta acessar json[ano][mes]
+                if (fatoresEnergiaMensal[anoAtual]) {
+                     // Tenta com string "5" ou int 5
+                    let val = fatoresEnergiaMensal[anoAtual][String(mesAtual)] || fatoresEnergiaMensal[anoAtual][mesAtual];
+                    if (val) fatorMes = val;
+                }
+
+                if (fatorMes > 0) {
+                    somaFatores += fatorMes;
+                    mesesContados++;
+                }
+
+                mesAtual++;
+                if (mesAtual > 12) { mesAtual = 1; anoAtual++; }
+            }
+
+            if (mesesContados === 0) {
+                alert("Dados não encontrados para este período."); return;
+            }
+
+            const mediaFatorMWh = somaFatores / mesesContados;
+            const fatorFinalKWh = mediaFatorMWh / 1000;
+            const totalEvitado = kwh * fatorFinalKWh;
+            const format = (n, d) => n.toLocaleString('pt-BR', {minimumFractionDigits:d, maximumFractionDigits:d});
+
+            // Texto dinâmico dependendo se é 1 mês ou vários
+            let textoPeriodo = "";
+            if (tipo === 'energiaSolarSimples') {
+                textoPeriodo = `referente ao mês de ${dataIni}`;
+            } else {
+                textoPeriodo = `entre ${dataIni} e ${dataFim}`;
+            }
+
+            textoResultado.innerHTML = `
+                A geração de <strong class="destaque-verde">${format(kwh, 0)} kWh</strong> de <strong>Energia Solar</strong>
+                ${textoPeriodo}.
+            `;
+
+            resultadoTotal.innerHTML = `<strong>${format(totalEvitado, 4)} tCO₂e</strong> evitadas`;
+
+            demonstracaoCalculo.innerHTML = `
+                Fator do Período: ${format(mediaFatorMWh, 4)} tCO₂e/MWh<br>
+                Cálculo: ${format(kwh, 0)} kWh &times; ${format(fatorFinalKWh, 7)} tCO₂e/kWh = ${format(totalEvitado, 4)} tCO₂e
+            `;
+
             areaResultado.style.display = 'block';
         }
 
-        // --- EVENT LISTENER ---
-        formulario.addEventListener('submit', calcularEmissao);
+        function exibirResultado(acao, qtd, unidade, nome, fator, total) {
+            const format = (n, d) => n.toLocaleString('pt-BR', {minimumFractionDigits:d, maximumFractionDigits:d});
+            textoResultado.innerHTML = `${acao} <strong class="destaque-verde">${format(qtd, 2)} ${unidade}</strong> de <strong>${nome}</strong> resultou em:`;
+            resultadoTotal.innerHTML = `<strong>${format(total, 4)} tCO₂e</strong> evitadas`;
+            demonstracaoCalculo.innerHTML = `${format(qtd, 2)} ${unidade} &times; ${format(fator, 3)} tCO₂e/${unidade} = ${format(total, 4)} tCO₂e`;
+            areaResultado.style.display = 'block';
+        }
     </script>
 </body>
 </html>
