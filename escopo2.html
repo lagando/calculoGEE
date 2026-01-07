@@ -36,8 +36,8 @@
 <body>
     <div class="container">
         <h1>Calculadora de Emissões de Gases do Efeito Estufa (Escopo 2)</h1>
-        <p><strong>Escopo 2:</strong> São as emissões da eletricidade que você compra e consome. <br>(geradas na usina de energia)<br><br>
-        Pegue sua conta de luz, e veja quantos kWh (quilowatt-hora) você gastou para saber quanto você emitiu na atmosfera.<br>
+        <p><strong>Escopo 2:</strong> São as emissões da eletricidade que você compra e consome. <br>(geradas na usina de energia)<br><br><br>
+        Pegue sua conta de luz, e veja quantos kWh (quilowatt-hora) você gastou para saber quanto você emitiu na atmosfera.<br><br>
         Preencha as datas de início e fim de consumo para calcular a emissão para qualquer período.
         </p>
 
@@ -132,7 +132,8 @@
         <div class="resultado" id="areaComparativo" style="background-color: #1c2b3a;">
         </div>
 
-        <br>
+        
+
         <div class="navegacao">
              <a href="https://lagando.github.io/calculoGEE/escopo1.html" class="botao-nav">Escopo 1</a>
              <a href="https://lagando.github.io/calculoGEE/escopo2.html" class="botao-nav">Escopo 2</a>
@@ -140,12 +141,14 @@
              <a href="https://lagando.github.io/calculoGEE/evitadas.html" class="botao-nav">Emissões Evitadas</a>
         </div>
         <footer>
-            <p><strong>O que é tCO₂e?</strong><br>
+            <p><strong>O que é tCO₂e?</strong><br><br>
             tCO₂e (tonelada de CO₂ equivalente) é a unidade de medida padrão que converte o impacto de aquecimento de todos os diferentes gases de efeito estufa em um único valor, como se tudo fosse dióxido de carbono.
-            <br><br><strong>E por que usar ele?</strong>
-            <br>Nós o usamos como base porque, como cada gás esquenta o planeta com uma "força" diferente, essa unidade nos permite somar todos eles em um resultado final único e fácil de comparar.</p>
-            <p>Feito por Gabriel Bahia - gabrielbahiapro@gmail.com<br>
-            <a href="https://www.linkedin.com/in/gabrielbahiagb/" target="_blank" style="color: #0077B5; font-weight: bold; text-decoration: underline; cursor: pointer;">- LinkedIn do pai (eu /gabrielbahiagb) -</a><br>
+            <br><br>
+<strong>E por que usar ele?</strong>
+            <br>
+Nós o usamos como base porque, como cada gás esquenta o planeta com uma "força" diferente, essa unidade nos permite somar todos eles em um resultado final único e fácil de comparar.</p>
+            <p>Feito por Gabriel Bahia - gabrielbahiapro@gmail.com<br><br>
+            <a href="https://www.linkedin.com/in/gabrielbahiagb/" target="_blank" style="color: #0077B5; font-weight: bold; text-decoration: underline; cursor: pointer;">- LinkedIn do pai (eu /gabrielbahiagb) -</a><br><br>
             Atualizado em: 02/12/2025 - v5-HTML</p>
         </footer>
     </div>
@@ -198,6 +201,10 @@
             const dataInicio = new Date(parseInt(anoAnterior.value), parseInt(mesAnterior.value) - 1, parseInt(diaAnterior.value));
             const dataFim = new Date(parseInt(anoAtual.value), parseInt(mesAtual.value) - 1, parseInt(diaAtual.value));
 
+            // Zera horas para evitar problemas de fuso horário
+            dataInicio.setHours(0,0,0,0);
+            dataFim.setHours(0,0,0,0);
+
             if (isNaN(dataInicio) || isNaN(dataFim) || dataFim < dataInicio) {
                 campoFator.value = '';
                 campoFator.placeholder = 'Período inválido';
@@ -207,7 +214,9 @@
             let totalDias = 0;
             let somaPonderada = 0;
             const breakdown = [];
+            // Clona a data para não alterar a original durante o loop
             let dataCorrente = new Date(dataInicio);
+            dataCorrente.setHours(0,0,0,0);
 
             while(dataCorrente <= dataFim){
                 const ano = dataCorrente.getFullYear();
@@ -223,25 +232,33 @@
                 let diasNesteMes = 0;
                 const ultimoDiaDoMes = new Date(ano, mes, 0).getDate();
 
-                if(dataCorrente.getFullYear() === dataInicio.getFullYear() && dataCorrente.getMonth() === dataInicio.getMonth()){
-                    diasNesteMes = ultimoDiaDoMes - dataInicio.getDate() + 1;
-                } else {
-                    diasNesteMes = ultimoDiaDoMes;
-                }
+                // Lógica refinada para contar os dias (Início, Meio, Fim)
+                const isMesInicio = (ano === dataInicio.getFullYear() && (mes - 1) === dataInicio.getMonth());
+                const isMesFim = (ano === dataFim.getFullYear() && (mes - 1) === dataFim.getMonth());
 
-                if(dataCorrente.getFullYear() === dataFim.getFullYear() && dataCorrente.getMonth() === dataFim.getMonth()){
+                if (isMesInicio && isMesFim) {
+                    // Período começa e termina no mesmo mês
+                    diasNesteMes = dataFim.getDate() - dataInicio.getDate() + 1;
+                } else if (isMesInicio) {
+                    // Primeiro mês (pode ser parcial)
+                    diasNesteMes = ultimoDiaDoMes - dataInicio.getDate() + 1;
+                } else if (isMesFim) {
+                    // Último mês (pode ser parcial)
                     diasNesteMes = dataFim.getDate();
-                    if(dataInicio.getFullYear() === dataFim.getFullYear() && dataInicio.getMonth() === dataFim.getMonth()){
-                        diasNesteMes = dataFim.getDate() - dataInicio.getDate() + 1;
-                    }
+                } else {
+                    // Mês completo no meio do período
+                    diasNesteMes = ultimoDiaDoMes;
                 }
 
                 somaPonderada += diasNesteMes * fatorDoMes;
                 totalDias += diasNesteMes;
                 breakdown.push({ ano, mes, dias: diasNesteMes, fator: fatorDoMes });
 
+                // --- CORREÇÃO DO LOOP ---
+                // 1. Seta dia 1 do mês corrente para evitar pular meses de 28/30 dias
+                dataCorrente.setDate(1); 
+                // 2. Avança para o próximo mês
                 dataCorrente.setMonth(dataCorrente.getMonth() + 1);
-                dataCorrente.setDate(1);
             }
 
             if (totalDias === 0) return null;
@@ -335,12 +352,14 @@
                     <span class="calc-title">Composição do Fator Ponderado</span>
                     ${breakdownHtml}
                     <hr>
-                    Total: ${dadosCalculo.totalDias} dias<br>
+                    Total: ${dadosCalculo.totalDias} dias
+
                     <strong>Fator Final: ${formatNumber(dadosCalculo.fatorPonderado, 8)} tCO₂e/MWh</strong>
                 </div>`;
             demoHtml += `<div class="demonstracao-calculo calc-center">
                 <span class="calc-title">Cálculo da Emissão Final</span>
-                (${formatNumber(consumo_kwh, 2)} kWh / 1000) &times; ${formatNumber(fator_usado, 8)}<br>
+                (${formatNumber(consumo_kwh, 2)} kWh / 1000) &times; ${formatNumber(fator_usado, 8)}
+
                 = <strong>${formatNumber(emissao_tco2e, 6)} tCO₂e</strong>
             </div>`;
             demonstracaoCalculo.innerHTML = demoHtml;
@@ -385,8 +404,8 @@
             const kgPapelReciclado = emissao_tco2e / TCO2E_EVITADO_KG_PAPEL;
             const kgOrganicoCompostado = emissao_tco2e / TCO2E_EVITADO_KG_ORGANICO_COMPOSTADO;
 
-            const comparativoHtml = `
-                <h3 style="text-align:center; color: #569cd6; margin-bottom: 20px;">O total emitido neste período equivale a:</h3>
+            const comparativoHtml = `<br>
+                <h3 style="text-align:center; color: #569cd6; margin-bottom: 20px;">O total emitido neste período equivale a:</h3><br>
 
                 <h4 style="color: #4e94d8; border-bottom: 1px solid #444; padding-bottom: 5px;">🏠 No dia a dia...</h4>
                 <ul>
