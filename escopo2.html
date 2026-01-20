@@ -31,99 +31,108 @@
         legend { color: #4e94d8; font-weight: bold; padding: 0 10px; }
         #areaComparativo ul { list-style: none; padding-left: 0; }
         #areaComparativo li { margin-bottom: 12px; font-size: 1.05em; }
+
+        /* NOVO ESTILO PARA A TRADUÇÃO (DISCRETO) */
+        .lang-en {
+            font-size: 0.85em;
+            color: #888; /* Cor mais apagada */
+            font-weight: normal;
+            font-style: italic;
+            margin-left: 5px;
+        }
     </style>
 </head>
 <body>
     <div class="container">
-        <h1>Calculadora de Emissões de Gases do Efeito Estufa (Escopo 2)</h1>
-        <p><strong>Escopo 2:</strong> São as emissões da eletricidade que você compra e consome. <br>(geradas na usina de energia)<br><br><br>
+        <h1>Calculadora de Emissões de Gases do Efeito Estufa (Escopo 2) <br><span class="lang-en" style="font-size: 0.6em;">(GHG Emissions Calculator - Scope 2)</span></h1>
+        <p><strong>Escopo 2:</strong> São as emissões da eletricidade que você compra e consome. <span class="lang-en">(Emissions from purchased electricity)</span><br>(geradas na usina de energia)<br><br><br>
         Pegue sua conta de luz, e veja quantos kWh (quilowatt-hora) você gastou para saber quanto você emitiu na atmosfera.<br><br>
-        Preencha as datas de início e fim de consumo para calcular a emissão para qualquer período.
+        Preencha as datas de início e fim de consumo para calcular a emissão para qualquer período. <span class="lang-en">(Fill in the dates to calculate emissions for any period)</span>
         </p>
 
         <form id="calculadoraForm">
             <fieldset>
-                <legend>Data de Início do Período de Referência</legend>
+                <legend>Data de Início do Período de Referência <span class="lang-en">(Start Date)</span></legend>
                  <div class="form-row">
                     <div class="form-group" style="flex: 1;">
-                        <label for="dia_anterior">Dia</label>
+                        <label for="dia_anterior">Dia <span class="lang-en">(Day)</span></label>
                         <input type="number" id="dia_anterior" min="1" max="31" required>
                     </div>
                     <div class="form-group" style="flex: 2;">
-                         <label for="mes_anterior">Mês</label>
+                         <label for="mes_anterior">Mês <span class="lang-en">(Month)</span></label>
                         <select id="mes_anterior" required>
-                            <option value="1">01 - Janeiro</option>
-                            <option value="2">02 - Fevereiro</option>
-                            <option value="3">03 - Março</option>
-                            <option value="4">04 - Abril</option>
-                            <option value="5">05 - Maio</option>
-                            <option value="6">06 - Junho</option>
-                            <option value="7">07 - Julho</option>
-                            <option value="8">08 - Agosto</option>
-                            <option value="9">09 - Setembro</option>
-                            <option value="10">10 - Outubro</option>
-                            <option value="11">11 - Novembro</option>
-                            <option value="12">12 - Dezembro</option>
+                            <option value="1">01 - Janeiro (Jan)</option>
+                            <option value="2">02 - Fevereiro (Feb)</option>
+                            <option value="3">03 - Março (Mar)</option>
+                            <option value="4">04 - Abril (Apr)</option>
+                            <option value="5">05 - Maio (May)</option>
+                            <option value="6">06 - Junho (Jun)</option>
+                            <option value="7">07 - Julho (Jul)</option>
+                            <option value="8">08 - Agosto (Aug)</option>
+                            <option value="9">09 - Setembro (Sep)</option>
+                            <option value="10">10 - Outubro (Oct)</option>
+                            <option value="11">11 - Novembro (Nov)</option>
+                            <option value="12">12 - Dezembro (Dec)</option>
                         </select>
                     </div>
                     <div class="form-group" style="flex: 1.5;">
-                         <label for="ano_anterior">Ano</label>
+                         <label for="ano_anterior">Ano <span class="lang-en">(Year)</span></label>
                         <select id="ano_anterior" required>
-                            <option value="">Carregando...</option>
+                            <option value="">Carregando... (Loading...)</option>
                         </select>
                     </div>
                 </div>
             </fieldset>
 
              <fieldset>
-                <legend>Data de Fim do Período de Referência</legend>
+                <legend>Data de Fim do Período de Referência <span class="lang-en">(End Date)</span></legend>
                  <div class="form-row">
                     <div class="form-group" style="flex: 1;">
-                        <label for="dia_atual">Dia</label>
+                        <label for="dia_atual">Dia <span class="lang-en">(Day)</span></label>
                         <input type="number" id="dia_atual" min="1" max="31" required>
                     </div>
                     <div class="form-group" style="flex: 2;">
-                         <label for="mes_atual">Mês</label>
+                         <label for="mes_atual">Mês <span class="lang-en">(Month)</span></label>
                         <select id="mes_atual" required>
-                            <option value="1">01 - Janeiro</option>
-                            <option value="2">02 - Fevereiro</option>
-                            <option value="3">03 - Março</option>
-                            <option value="4">04 - Abril</option>
-                            <option value="5">05 - Maio</option>
-                            <option value="6">06 - Junho</option>
-                            <option value="7">07 - Julho</option>
-                            <option value="8">08 - Agosto</option>
-                            <option value="9">09 - Setembro</option>
-                            <option value="10">10 - Outubro</option>
-                            <option value="11">11 - Novembro</option>
-                            <option value="12">12 - Dezembro</option>
+                            <option value="1">01 - Janeiro (Jan)</option>
+                            <option value="2">02 - Fevereiro (Feb)</option>
+                            <option value="3">03 - Março (Mar)</option>
+                            <option value="4">04 - Abril (Apr)</option>
+                            <option value="5">05 - Maio (May)</option>
+                            <option value="6">06 - Junho (Jun)</option>
+                            <option value="7">07 - Julho (Jul)</option>
+                            <option value="8">08 - Agosto (Aug)</option>
+                            <option value="9">09 - Setembro (Sep)</option>
+                            <option value="10">10 - Outubro (Oct)</option>
+                            <option value="11">11 - Novembro (Nov)</option>
+                            <option value="12">12 - Dezembro (Dec)</option>
                         </select>
                     </div>
                     <div class="form-group" style="flex: 1.5;">
-                         <label for="ano_atual">Ano</label>
+                         <label for="ano_atual">Ano <span class="lang-en">(Year)</span></label>
                         <select id="ano_atual" required>
-                            <option value="">Carregando...</option>
+                            <option value="">Carregando... (Loading...)</option>
                         </select>
                     </div>
-                </div><p style="font-style: italic; font-size: 0.9em; text-align: right;" id="statusData">Verificando dados...</p>
+                </div><p style="font-style: italic; font-size: 0.9em; text-align: right;" id="statusData">Verificando dados... <span class="lang-en">(Checking data...)</span></p>
             </fieldset>
 
             <div class="form-group">
-                <label for="consumo_kwh">Consumo Total de Energia no Período (em kWh):</label>
+                <label for="consumo_kwh">Consumo Total de Energia no Período (em kWh): <span class="lang-en">(Total Energy Consumption in kWh)</span></label>
                 <input type="number" id="consumo_kwh" step="0.01" min="0" required>
             </div>
 
             <div class="form-group">
-                <label for="fator_emissao">Fator de Emissão Ponderado (tCO₂e/MWh):</label>
+                <label for="fator_emissao">Fator de Emissão Ponderado (tCO₂e/MWh): <span class="lang-en">(Weighted Emission Factor)</span></label>
                 <input type="number" id="fator_emissao" step="0.000001" min="0" readonly required>
-                 <p class="info-label">Calculado automaticamente com base no período selecionado.</p>
+                 <p class="info-label">Calculado automaticamente com base no período selecionado. <span class="lang-en">(Auto-calculated based on selected period)</span></p>
             </div>
 
-            <button type="submit">Calcular Emissão</button>
+            <button type="submit">Calcular Emissão <span class="lang-en">(Calculate)</span></button>
         </form>
 
         <div class="resultado" id="areaResultado">
-            <h2>Resultado da Emissão:</h2>
+            <h2>Resultado da Emissão: <span class="lang-en">(Result)</span></h2>
             <p id="textoResultado"></p>
             <p id="mediaDiariaResultado"></p>
             <div id="demonstracaoCalculo"></div>
@@ -141,10 +150,10 @@
              <a href="https://lagando.github.io/calculoGEE/evitadas.html" class="botao-nav">Emissões Evitadas</a>
         </div>
         <footer>
-            <p><strong>O que é tCO₂e?</strong><br><br>
+            <p><strong>O que é tCO₂e?</strong> <span class="lang-en">(What is tCO₂e?)</span><br><br>
             tCO₂e (tonelada de CO₂ equivalente) é a unidade de medida padrão que converte o impacto de aquecimento de todos os diferentes gases de efeito estufa em um único valor, como se tudo fosse dióxido de carbono.
             <br><br>
-<strong>E por que usar ele?</strong>
+<strong>E por que usar ele?</strong> <span class="lang-en">(Why use it?)</span>
             <br>
 Nós o usamos como base porque, como cada gás esquenta o planeta com uma "força" diferente, essa unidade nos permite somar todos eles em um resultado final único e fácil de comparar.</p>
             <p>Feito por Gabriel Bahia - gabrielbahiapro@gmail.com<br><br>
@@ -207,7 +216,7 @@ Nós o usamos como base porque, como cada gás esquenta o planeta com uma "forç
 
             if (isNaN(dataInicio) || isNaN(dataFim) || dataFim < dataInicio) {
                 campoFator.value = '';
-                campoFator.placeholder = 'Período inválido';
+                campoFator.placeholder = 'Período inválido (Invalid)';
                 return null;
             }
 
@@ -282,7 +291,7 @@ Nós o usamos como base porque, como cada gás esquenta o planeta com uma "forç
             
             // Atualiza status visual
             const nomeMes = new Date(ultimoAnoDisponivel, ultimoMesDisponivel - 1, 1).toLocaleString('pt-BR', { month: 'long' });
-            statusData.textContent = `(calculo disponível até ${nomeMes}/${ultimoAnoDisponivel})`;
+            statusData.innerHTML = `(calculo disponível até ${nomeMes}/${ultimoAnoDisponivel}) <span class="lang-en" style="font-size: 0.8em;">(Data available until ${ultimoMesDisponivel}/${ultimoAnoDisponivel})</span>`;
             statusData.style.color = "#d4d4d4";
 
             selectsAno.forEach(select => {
@@ -342,14 +351,14 @@ Nós o usamos como base porque, como cada gás esquenta o planeta com uma "forç
             const [dAnt, mAnt, aAnt] = [String(diaAnterior.value).padStart(2, '0'), String(mesAnterior.value).padStart(2, '0'), anoAnterior.value];
             const [dAtu, mAtu, aAtu] = [String(diaAtual.value).padStart(2, '0'), String(mesAtual.value).padStart(2, '0'), anoAtual.value];
 
-            textoResultado.innerHTML = `Para o período de <strong>${dAnt}/${mAnt}/${aAnt}</strong> a <strong>${dAtu}/${mAtu}/${aAtu}</strong>, a emissão total foi de <strong>${formatNumber(emissao_tco2e, 6)} tCO₂e</strong>.`;
-            mediaDiariaResultado.innerHTML = `Isto representa uma média de <strong>${formatNumber(mediaDiaria, 8)} tCO₂e por dia</strong>.`;
+            textoResultado.innerHTML = `Para o período de <strong>${dAnt}/${mAnt}/${aAnt}</strong> a <strong>${dAtu}/${mAtu}/${aAtu}</strong>, a emissão total foi de <strong>${formatNumber(emissao_tco2e, 6)} tCO₂e</strong>. <br><span class="lang-en" style="display:block; margin-top:5px;">(For this period, total emission was <strong>${formatNumber(emissao_tco2e, 6)} tCO₂e</strong>)</span>`;
+            mediaDiariaResultado.innerHTML = `Isto representa uma média de <strong>${formatNumber(mediaDiaria, 8)} tCO₂e por dia</strong>. <span class="lang-en">(Daily average)</span>`;
 
             let breakdownHtml = dadosCalculo.breakdown.map(item =>
                 `&nbsp;${String(item.mes).padStart(2,'0')}/${item.ano}: ${String(item.dias).padStart(2,' ')} dias &times; ${formatNumber(item.fator, 5)}`
             ).join('<br>');
             let demoHtml = `<div class="demonstracao-calculo">
-                    <span class="calc-title">Composição do Fator Ponderado</span>
+                    <span class="calc-title">Composição do Fator Ponderado <span class="lang-en" style="font-size:0.7em">(Factor Breakdown)</span></span>
                     ${breakdownHtml}
                     <hr>
                     Total: ${dadosCalculo.totalDias} dias
@@ -357,7 +366,7 @@ Nós o usamos como base porque, como cada gás esquenta o planeta com uma "forç
                     <strong>Fator Final: ${formatNumber(dadosCalculo.fatorPonderado, 8)} tCO₂e/MWh</strong>
                 </div>`;
             demoHtml += `<div class="demonstracao-calculo calc-center">
-                <span class="calc-title">Cálculo da Emissão Final</span>
+                <span class="calc-title">Cálculo da Emissão Final <span class="lang-en" style="font-size:0.7em">(Final Calculation)</span></span>
                 (${formatNumber(consumo_kwh, 2)} kWh / 1000) &times; ${formatNumber(fator_usado, 8)}
 
                 = <strong>${formatNumber(emissao_tco2e, 6)} tCO₂e</strong>
@@ -405,42 +414,42 @@ Nós o usamos como base porque, como cada gás esquenta o planeta com uma "forç
             const kgOrganicoCompostado = emissao_tco2e / TCO2E_EVITADO_KG_ORGANICO_COMPOSTADO;
 
             const comparativoHtml = `<br>
-                <h3 style="text-align:center; color: #569cd6; margin-bottom: 20px;">O total emitido neste período equivale a:</h3><br>
+                <h3 style="text-align:center; color: #569cd6; margin-bottom: 20px;">O total emitido neste período equivale a: <br><span class="lang-en" style="font-size:0.7em">(Equivalent to:)</span></h3><br>
 
-                <h4 style="color: #4e94d8; border-bottom: 1px solid #444; padding-bottom: 5px;">🏠 No dia a dia...</h4>
+                <h4 style="color: #4e94d8; border-bottom: 1px solid #444; padding-bottom: 5px;">🏠 No dia a dia... <span class="lang-en">(Daily Life)</span></h4>
                 <ul>
-                    <li>🚿 <strong>${formatarEquivalencia(banhosDeChuveiro)}</strong> banhos de 10 minutos em um chuveiro elétrico.</li>
-                    <li>❄️ Manter um ar condicionado ligado por <strong>${formatarEquivalencia(horasDeArCondicionado)}</strong> horas.</li>
-                    <li>📱 Carregar completamente um smartphone <strong>${formatarEquivalencia(cargasDeSmartphone)}</strong> vezes.</li>
-                    <li>📺 Assistir a <strong>${formatarEquivalencia(horasDeStreaming)}</strong> horas de vídeo em alta definição.</li>
+                    <li>🚿 <strong>${formatarEquivalencia(banhosDeChuveiro)}</strong> banhos de 10 minutos em um chuveiro elétrico. <span class="lang-en">(Showers)</span></li>
+                    <li>❄️ Manter um ar condicionado ligado por <strong>${formatarEquivalencia(horasDeArCondicionado)}</strong> horas. <span class="lang-en">(AC hours)</span></li>
+                    <li>📱 Carregar completamente um smartphone <strong>${formatarEquivalencia(cargasDeSmartphone)}</strong> vezes. <span class="lang-en">(Phone charges)</span></li>
+                    <li>📺 Assistir a <strong>${formatarEquivalencia(horasDeStreaming)}</strong> horas de vídeo em alta definição. <span class="lang-en">(Streaming hours)</span></li>
                 </ul>
 
-                <h4 style="color: #4e94d8; border-bottom: 1px solid #444; padding-bottom: 5px; margin-top: 25px;">💡 Energia e Indústria...</h4>
+                <h4 style="color: #4e94d8; border-bottom: 1px solid #444; padding-bottom: 5px; margin-top: 25px;">💡 Energia e Indústria... <span class="lang-en">(Energy & Industry)</span></h4>
                 <ul>
-                    <li>🏠 A energia consumida por <strong>${formatarEquivalencia(casasAbastecidasMes)} residências</strong> durante um mês.</li>
-                    <li>☀️ Seriam necessários cerca de <strong>${formatarEquivalencia(m2PaineisSolaresNecessarios)} m²</strong> de painéis solares para gerar essa mesma energia em um mês.</li>
-                    <li>🛢️ A queima de <strong>${formatarEquivalencia(barrisDePetroleo)} barris</strong> de petróleo.</li>
-                    <li>🥫 A produção de <strong>${formatarEquivalencia(latasDeAluminio)} latinhas</strong> de alumínio.</li>
+                    <li>🏠 A energia consumida por <strong>${formatarEquivalencia(casasAbastecidasMes)} residências</strong> durante um mês. <span class="lang-en">(Houses powered/month)</span></li>
+                    <li>☀️ Seriam necessários cerca de <strong>${formatarEquivalencia(m2PaineisSolaresNecessarios)} m²</strong> de painéis solares para gerar essa mesma energia em um mês. <span class="lang-en">(Solar panels area)</span></li>
+                    <li>🛢️ A queima de <strong>${formatarEquivalencia(barrisDePetroleo)} barris</strong> de petróleo. <span class="lang-en">(Oil barrels)</span></li>
+                    <li>🥫 A produção de <strong>${formatarEquivalencia(latasDeAluminio)} latinhas</strong> de alumínio. <span class="lang-en">(Aluminum cans produced)</span></li>
                 </ul>
 
-                <h4 style="color: #4e94d8; border-bottom: 1px solid #444; padding-bottom: 5px; margin-top: 25px;">🚗 Transporte e Brasil...</h4>
+                <h4 style="color: #4e94d8; border-bottom: 1px solid #444; padding-bottom: 5px; margin-top: 25px;">🚗 Transporte e Brasil... <span class="lang-en">(Transport & Environment)</span></h4>
                  <ul>
-                    <li>🚗 Dirigir um carro de passeio a gasolina por <strong>${formatarEquivalencia(kmDeCarro)} km</strong>.</li>
-                    <li>✈️ <strong>${formatarEquivalencia(voosRioSP)}</strong> voos (só de ida) na ponte aérea Rio-São Paulo por passageiro.</li>
-                    <li>🐄 As emissões da produção de <strong>${formatarEquivalencia(kgDeCarne)} kg</strong> de carne bovina.</li>
-                    <li>🌳 O carbono que <strong>${formatarEquivalencia(arvoresPorAno)} árvores</strong> adultas absorvem da atmosfera em um ano.</li>
-                    <li>🔥 O desmatamento de <strong>${formatarEquivalencia(m2Desmatados)} m²</strong> de floresta amazônica.
-                        <br><small style="opacity: 0.8;"><i>(Equivalente a <strong>${formatarEquivalencia(camposDeFutebol)}</strong> campos de futebol)</i></small>
+                    <li>🚗 Dirigir um carro de passeio a gasolina por <strong>${formatarEquivalencia(kmDeCarro)} km</strong>. <span class="lang-en">(Km driven by car)</span></li>
+                    <li>✈️ <strong>${formatarEquivalencia(voosRioSP)}</strong> voos (só de ida) na ponte aérea Rio-São Paulo por passageiro. <span class="lang-en">(Flights)</span></li>
+                    <li>🐄 As emissões da produção de <strong>${formatarEquivalencia(kgDeCarne)} kg</strong> de carne bovina. <span class="lang-en">(Beef production)</span></li>
+                    <li>🌳 O carbono que <strong>${formatarEquivalencia(arvoresPorAno)} árvores</strong> adultas absorvem da atmosfera em um ano. <span class="lang-en">(Trees absorbing/year)</span></li>
+                    <li>🔥 O desmatamento de <strong>${formatarEquivalencia(m2Desmatados)} m²</strong> de floresta amazônica. <span class="lang-en">(Deforestation area)</span>
+                        <br><small style="opacity: 0.8;"><i>(Equivalente a <strong>${formatarEquivalencia(camposDeFutebol)}</strong> campos de futebol) <span class="lang-en">(Soccer fields)</span></i></small>
                     </li>
                 </ul>
 
-                <h4 style="color: #4e94d8; border-bottom: 1px solid #444; padding-bottom: 5px; margin-top: 25px;">♻️ Reciclagem e Ações Positivas</h4>
-                <p style="font-size:0.9em; opacity:0.8; margin-top:-10px; margin-bottom:15px;">Esta mesma quantidade de emissão poderia ser <strong>evitada</strong> com ações como:</p>
+                <h4 style="color: #4e94d8; border-bottom: 1px solid #444; padding-bottom: 5px; margin-top: 25px;">♻️ Reciclagem e Ações Positivas <span class="lang-en">(Recycling)</span></h4>
+                <p style="font-size:0.9em; opacity:0.8; margin-top:-10px; margin-bottom:15px;">Esta mesma quantidade de emissão poderia ser <strong>evitada</strong> com ações como: <span class="lang-en">(Equivalent avoided by:)</span></p>
                  <ul>
-                    <li>🥫 Reciclar <strong>${formatarEquivalencia(latasAluminioRecicladas)} latinhas</strong> de alumínio.</li>
-                    <li>🍾 Reciclar <strong>${formatarEquivalencia(garrafasPetRecicladas)} garrafas PET</strong> de 500ml.</li>
-                    <li>📰 Reciclar <strong>${formatarEquivalencia(kgPapelReciclado)} kg</strong> de papel e papelão.</li>
-                    <li>🥕 Composter <strong>${formatarEquivalencia(kgOrganicoCompostado)} kg</strong> de resíduos orgânicos (evitando a geração de metano no aterro).</li>
+                    <li>🥫 Reciclar <strong>${formatarEquivalencia(latasAluminioRecicladas)} latinhas</strong> de alumínio. <span class="lang-en">(Recycling cans)</span></li>
+                    <li>🍾 Reciclar <strong>${formatarEquivalencia(garrafasPetRecicladas)} garrafas PET</strong> de 500ml. <span class="lang-en">(Recycling PET bottles)</span></li>
+                    <li>📰 Reciclar <strong>${formatarEquivalencia(kgPapelReciclado)} kg</strong> de papel e papelão. <span class="lang-en">(Recycling paper)</span></li>
+                    <li>🥕 Composter <strong>${formatarEquivalencia(kgOrganicoCompostado)} kg</strong> de resíduos orgânicos (evitando a geração de metano no aterro). <span class="lang-en">(Composting organic waste)</span></li>
                 </ul>
 
                 <p style="font-size: 0.8em; text-align: center; opacity: 0.7; margin-top:20px;"><i>* As equivalências são estimativas para fins ilustrativos, baseadas em médias de fontes como EPA (incluindo o modelo WARM), IEA, INPE, EPE e Embrapa.</i></p>
