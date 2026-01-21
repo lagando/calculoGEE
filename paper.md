@@ -71,7 +71,7 @@ Figure 1 details the data flow and the time-weighted logic implemented in the so
 To demonstrate the precision of the time-weighted algorithm, consider a scenario where an organization needs to report emissions for a billing period spanning two months with distinct hydrological characteristics (e.g., a transition from a wet to a dry season).
 
 **Scenario:**
-* **Period:** April 15, 2024 to May 15, 2024 (Total: 31 days).
+* **Period:** April 15, 2025 to May 15, 2025 (Total: 31 days).
 * **Consumption:** 1,000 kWh.
 * **Data Source:** The tool automatically retrieves the specific factors for April ($EF_{Apr}$) and May ($EF_{May}$) from the JSON database.
 
