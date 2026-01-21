@@ -39,7 +39,9 @@ The software replaces static multiplication with a time-weighted loop. For any g
 
 The weighted emission factor ($EF_{weighted}$) is defined as:
 
-$$EF_{weighted} = \frac{\sum_{i=1}^{n} (d_i \times EF_i)}{\sum_{i=1}^{n} d_i}$$
+$$
+EF_{weighted} = \frac{\sum_{i=1}^{n} (d_i \times EF_i)}{\sum_{i=1}^{n} d_i}
+$$
 
 Where:
 * $n$: the number of distinct months in the interval.
@@ -48,7 +50,9 @@ Where:
 
 Finally, the Total Emissions ($E_{total}$) are calculated based on the user's energy consumption ($C_{kWh}$):
 
-$$E_{total} = \left( \frac{C_{kWh}}{1000} \right) \times EF_{weighted}$$
+$$
+E_{total} = \left( \frac{C_{kWh}}{1000} \right) \times EF_{weighted}
+$$
 
 # Software Architecture
 
@@ -60,7 +64,7 @@ The implementation focuses on scientific reproducibility, accessibility, and eas
 
 Figure 1 details the data flow and the time-weighted logic implemented in the source code.
 
-![Algorithm flowchart demonstrating the logic implemented in the script tag. The diagram details the interaction between the English logic flow and the specific Portuguese variables used in the source code. The process highlights the Time-Weighted Algorithm (yellow block) responsible for handling the variability of the Brazilian energy grid factors stored in `fatores.json`.](path/to/your/figure1.png)
+![Algorithm flowchart demonstrating the logic implemented in the script tag. The diagram details the interaction between the English logic flow and the specific Portuguese variables used in the source code. The process highlights the Time-Weighted Algorithm (yellow block) responsible for handling the variability of the Brazilian energy grid factors stored in `fatores.json`.](fig1.jpg)
 
 # Usage and Validation
 
@@ -73,11 +77,13 @@ To demonstrate the precision of the time-weighted algorithm, consider a scenario
 
 Instead of applying a generic annual average, the tool performs the following calculation:
 
-$$EF_{weighted} = \frac{(16 \text{ days} \times EF_{Apr}) + (15 \text{ days} \times EF_{May})}{31 \text{ days}}$$
+$$
+EF_{weighted} = \frac{(16 \text{ days} \times EF_{Apr}) + (15 \text{ days} \times EF_{May})}{31 \text{ days}}
+$$
 
 This granular approach ensures that the final report reflects the exact carbon intensity of the grid during the consumption period. Figure 2 shows the user interface displaying the calculation breakdown and contextual equivalencies.
 
-![Screenshot of the `calculoGEE` interface (Scope 2 module). The interface displays the input fields for dates and energy consumption, followed by the calculated results and a "Factor Breakdown" section that details the specific days and emission factors used for the weighted average calculation.](path/to/your/figure2.png)
+![Screenshot of the `calculoGEE` interface (Scope 2 module). The interface displays the input fields for dates and energy consumption, followed by the calculated results and a "Factor Breakdown" section that details the specific days and emission factors used for the weighted average calculation.](fig2.png)
 
 # Availability
 
