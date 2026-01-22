@@ -380,7 +380,7 @@
             let txtData = (tipo === 'solarSimples') ? `em ${inicio.mes}/${inicio.ano}` : `de ${inicio.mes}/${inicio.ano} a ${fim.mes}/${fim.ano}`;
 
             els.txtRes.innerHTML = `A geração de <strong>${format(kwh, 0)} kWh</strong> de <strong>Energia Solar</strong> (${txtData}) resultou em:`;
-            els.totalRes.innerHTML = `<strong>${format(total, 4)} tCO₂e</strong> evitadas`;
+            els.totalRes.innerHTML = `<strong>${format(total, 8)} tCO₂e</strong> evitadas`;
             els.demoRes.innerHTML = `Média Fator SIN: ${format(mediaMWh, 4)} tCO₂e/MWh<br>${kwh} kWh &times; ${format(fatorKWh, 7)} = ${format(total, 4)} tCO₂e`;
             els.areaRes.style.display = 'block';
         }
