@@ -15,7 +15,6 @@ affiliations:
  - name: Gestão Ambiental e Sustentabilidade, Universidade Federal de Alfenas (UNIFAL-MG), Brazil
    index: 1
 date: 20 January 2026
-bibliography: paper.bib
 ---
 
 # Summary
@@ -28,8 +27,8 @@ Accurate Scope 2 accounting in Brazil requires handling significant hydrological
 
 Furthermore, there is a frequent methodological confusion in the field between:
 
-1. **Corporate Inventories:** These require the **Average Emission Factor**, which considers the emissions of all generating plants in the system [@MCTI_Fatores].
-2. **Clean Development Mechanism (CDM):** These projects require the **Operating Margin Factor**, which focuses only on plants operating at the margin to estimate avoided emissions [@UNFCCC_Tool].
+1. **Corporate Inventories:** These require the **Average Emission Factor**, which considers the emissions of all generating plants in the system (MCTI, 2025).
+2. **Clean Development Mechanism (CDM):** These projects require the **Operating Margin Factor**, which focuses only on plants operating at the margin to estimate avoided emissions (UNFCCC, 2024).
 
 General-purpose calculators often fail to distinguish these methods clearly or lack the database granularity to apply monthly factors correctly over arbitrary time ranges. `calculoGEE` enforces the MCTI methodology for corporate inventories, ensuring compliance with national reporting standards. It utilizes a decoupled JSON database (`fatores.json`) to accommodate frequent updates from the National System Operator (ONS), such as the grid expansion data integrated in January 2025.
 
@@ -60,7 +59,7 @@ The implementation focuses on scientific reproducibility, accessibility, and eas
 
 * **Decoupled Data:** Emission factors are isolated in an external JSON file. This allows non-developers to audit the data sources or update the dataset (e.g., adapting the tool for other national grids like the US eGRID or European EEA data) without modifying the application logic.
 * **Privacy-First:** The tool uses the Fetch API to retrieve parameters, but all mathematical processing executes locally in the user's browser. No consumption data is transmitted to external servers.
-* **Contextual Output:** To aid data interpretation and science communication, the system converts abstract mass values ($tCO_2e$) into tangible equivalencies (e.g., "number of trees planted", "km driven") based on standard factors [@WRI_GHG].
+* **Contextual Output:** To aid data interpretation and science communication, the system converts abstract mass values ($tCO_2e$) into tangible equivalencies (e.g., "number of trees planted", "km driven") based on standard factors (WRI & WBCSD, 2004).
 
 Figure 1 details the data flow and the time-weighted logic implemented in the source code.
 
@@ -85,6 +84,10 @@ This granular approach ensures that the final report reflects the exact carbon i
 
 ![Screenshot of the `calculoGEE` interface (Scope 2 module). The interface displays the input fields for dates and energy consumption, followed by the calculated results and a "Factor Breakdown" section that details the specific days and emission factors used for the weighted average calculation.](fig2.png)
 
+# Acknowledgements
+
+The author acknowledges the extension project "SIREGEE - Sistema de Inventário de Relato de Emissões de Gases de Efeito Estufa" at the Federal University of Alfenas (UNIFAL-MG) for providing the practical context that motivated the development of this auxiliary tool.
+
 # Availability
 
 * **Repository:** https://github.com/lagando/calculoGEE
@@ -92,3 +95,9 @@ This granular approach ensures that the final report reflects the exact carbon i
 * **License:** MIT License
 
 # References
+
+**MCTI - Ministério da Ciência, Tecnologia e Inovações.** (2025). *Fatores de Emissão de CO2 pela geração de energia elétrica no Sistema Interligado Nacional do Brasil*. Available at: https://www.gov.br/mcti/pt-br/acompanhe-o-mcti/sirene/dados-e-ferramentas/fatores-de-emissao
+
+**UNFCCC.** (2024). *Tool to calculate the emission factor for an electricity system (Version 07.0)*. Bonn: Clean Development Mechanism (CDM). Available at: https://cdm.unfccc.int/methodologies/PAmethodologies/tools/am-tool-07-v7.0.pdf
+
+**WRI & WBCSD.** (2004). *The Greenhouse Gas Protocol: A Corporate Accounting and Reporting Standard*. Washington, DC: World Resources Institute & World Business Council for Sustainable Development.
