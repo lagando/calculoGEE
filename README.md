@@ -54,6 +54,18 @@ O projeto foi construído sobre uma arquitetura leve e acessível:
 * **E-mail:** gabrielbahiapro@gmail.com
 * **GitHub:** [@lagando](https://github.com/lagando)
 
+### 🏛️ Contexto Institucional
+
+Esta ferramenta foi desenvolvida como uma iniciativa complementar às atividades do projeto de extensão **SIREGEE (Sistema de Inventário de Relato de Emissões de Gases de Efeito Estufa)** da **Universidade Federal de Alfenas (UNIFAL-MG)**.
+
+## 📚 Como Citar
+
+Se você utilizar esta ferramenta em sua pesquisa, por favor cite o software. Os metadados de citação estão disponíveis no arquivo [`CITATION.cff`](CITATION.cff) deste repositório.
+
+## 📄 Licença
+
+Este projeto está licenciado sob a Licença MIT - consulte o arquivo [LICENSE](LICENSE) para obter detalhes.
+
 ---
 
 <a name="-english-version"></a>
@@ -110,6 +122,11 @@ To use this engine for your country's data:
 1.  Fork this repository.
 2.  Update `fatores.json` with your local emission factors in the format `{"Year": {"Month": Factor}}`.
 3.  The algorithm will automatically recalculate weighted averages based on your new dataset.
+
+
+## 📚 How to Cite
+
+If you use this tool in your research, please cite the software. Citation metadata is available in the [`CITATION.cff`](CITATION.cff) file.
 
 ---
 
