@@ -70,14 +70,14 @@ Figure 1 details the data flow and the time-weighted logic implemented in the so
 To demonstrate the precision of the time-weighted algorithm, consider a scenario where an organization needs to report emissions for a billing period spanning two months with distinct hydrological characteristics (e.g., a transition from a wet to a dry season).
 
 **Scenario:**
-* **Period:** April 15, 2025 to May 15, 2025 (Total: 31 days).
+* **Period:** September 15, 2025 to October 15, 2025 (Total: 31 days).
 * **Consumption:** 1,000 kWh.
-* **Data Source:** The tool automatically retrieves the specific factors for April ($EF_{Apr}$) and May ($EF_{May}$) from the JSON database.
+* **Data Source:** The tool automatically retrieves the specific factors for Setember ($EF_{Set}$) and October ($EF_{Oct}$) from the JSON database.
 
 Instead of applying a generic annual average, the tool performs the following calculation:
 
 $$
-EF_{weighted} = \frac{(16 \text{ days} \times EF_{Apr}) + (15 \text{ days} \times EF_{May})}{31 \text{ days}}
+EF_{weighted} = \frac{(16 \text{ days} \times EF_{Set}) + (15 \text{ days} \times EF_{Oct})}{31 \text{ days}}
 $$
 
 This granular approach ensures that the final report reflects the exact carbon intensity of the grid during the consumption period. Figure 2 shows the user interface displaying the calculation breakdown and contextual equivalencies.
