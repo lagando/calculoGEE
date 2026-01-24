@@ -14,7 +14,7 @@ authors:
 affiliations:
  - name: Gestão Ambiental e Sustentabilidade, Universidade Federal de Alfenas (UNIFAL-MG), Brazil
    index: 1
-date: 20 January 2026
+date: 24 January 2026
 ---
 
 # Summary
