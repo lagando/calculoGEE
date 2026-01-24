@@ -352,15 +352,26 @@ Nós o usamos como base porque, como cada gás esquenta o planeta com uma "forç
             const [dAtu, mAtu, aAtu] = [String(diaAtual.value).padStart(2, '0'), String(mesAtual.value).padStart(2, '0'), anoAtual.value];
 
             //textoResultado.innerHTML = `Para o período de <strong>${dAnt}/${mAnt}/${aAnt}</strong> a <strong>${dAtu}/${mAtu}/${aAtu}</strong>, a emissão total foi de <strong>${formatNumber(emissao_tco2e, 6)} tCO₂e</strong>. <br><span class="lang-en" style="display:block; margin-top:5px;">(For this period, total emission was <strong>${formatNumber(emissao_tco2e, 6)} tCO₂e</strong>)</span>`;
-            textoResultado.innerHTML = `
-  <div style="text-align: center; margin-bottom: 10px;">
-    <span style="font-size: 1rem;">Para o período de <strong>${dAnt}/${mAnt}/${aAnt}</strong> a <strong>${dAtu}/${mAtu}/${aAtu}</strong>, a emissão total foi de:</span>
+textoResultado.innerHTML = `
+  <div style="text-align: center; margin-bottom: 15px;">
+    <span style="font-size: 1rem; opacity: 0.9;">Para o período de <strong>${dAnt}/${mAnt}/${aAnt}</strong> a <strong>${dAtu}/${mAtu}/${aAtu}</strong>, a emissão total foi de:</span>
     
-    <div style="font-size: 2.8rem; font-weight: bold; margin: 15px 0; line-height: 1;">
-      ${formatNumber(emissao_tco2e, 6)} tCO₂e
+    <div style="
+        font-size: 3.5rem; 
+        font-weight: 900; 
+        margin: 10px 0; 
+        line-height: 1.1;
+        /* Efeito de Gradiente (Azul -> Verde) */
+        background: -webkit-linear-gradient(45deg, #3498db, #2ecc71);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        /* Sombra suave para destacar do fundo */
+        filter: drop-shadow(0px 4px 6px rgba(0,0,0,0.15));
+    ">
+      ${formatNumber(emissao_tco2e, 6)} <span style="font-size: 2rem;">tCO₂e</span>
     </div>
 
-    <span class="lang-en" style="display:block; font-size: 0.9rem; opacity: 0.8; margin-top: 5px;">
+    <span class="lang-en" style="display:block; font-size: 0.85rem; opacity: 0.7; margin-top: 0;">
       (Total emission for this period)
     </span>
   </div>
